@@ -1,0 +1,121 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">#2196F3</item>
+    </style>
+
+    <style name="datepicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="text_input_layout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/text_size_14dp</item>
+        <item name="android:textColorHint">@color/blackColor</item>
+
+        //added attributes
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+
+    </style>
+
+    <!--Text Bold Styles-->
+    <style name="text_style_black_bold_24dp">
+        <item name="android:textColor">@color/blackColor</item>
+        <item name="android:textSize">@dimen/text_size_24dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="text_style_black_bold_48dp">
+        <item name="android:textColor">@color/blackColor</item>
+        <item name="android:textSize">@dimen/text_size_48dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="text_style_white_bold_44dp">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_size_44dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="text_style_primaryColor_bold_18dp">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/text_size_18dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <!--Text Normal Styles-->
+    <style name="text_style_black_normal_18dp">
+        <item name="android:textColor">@color/blackColor</item>
+        <item name="android:textSize">@dimen/text_size_18dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="text_style_black_normal_16dp">
+        <item name="android:textColor">@color/blackColor</item>
+        <item name="android:textSize">@dimen/text_size_16dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="text_style_black_normal_14dp">
+        <item name="android:textColor">@color/blackColor</item>
+        <item name="android:textSize">@dimen/text_size_14dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+
+    <style name="text_style_black_normal_24dp">
+        <item name="android:textColor">@color/blackColor</item>
+        <item name="android:textSize">@dimen/text_size_24dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="text_style_white_normal_20dp">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_size_20dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="text_style_white_normal_24dp">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_size_24dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="text_style_white_normal_18dp">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_size_18dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="text_style_white_normal_16dp">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_size_16dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="text_style_primaryColor_normal_20dp">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/text_size_20dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="text_style_primaryColor_normal_16dp">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/text_size_16dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+
+</resources>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80dedede"
+    android:orientation="vertical"
+    tools:context="com.wondercars.executiveridetracker.Activities.BookSlotActivity">
+
+    <include
+        layout="@layout/common_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_margin_20dp"
+        android:fillViewport="true"
+        android:isScrollContainer="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <TextView
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_margin_10dp"
+                android:gravity="center_vertical"
+                android:text="Select Car Model" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/spinner_select_car_models"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </Spinner>
+
+
+            </LinearLayout>
+
+            <!--
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_weight="0.15"
+                        app:hintTextAppearance="@style/text_input_layout">
+
+                        <EditText
+                            android:id="@+id/et_car_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Car Name"
+                            android:inputType="text" />
+
+                    </android.support.design.widget.TextInputLayout>-->
+
+
+            <TextView
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_margin_10dp"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:gravity="center_vertical"
+                android:text="Select Car Variant" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/spinner_select_variant"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </Spinner>
+
+
+            </LinearLayout>
+
+
+            <TextView
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_margin_10dp"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:gravity="center_vertical"
+                android:text="Select Registration Number" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/spinner_select_registration_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </Spinner>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_pick_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"
+                    android:src="@android:drawable/ic_menu_my_calendar" />
+
+                <TextView
+                    android:id="@+id/tv_selected_date"
+                    style="@style/text_style_primaryColor_normal_20dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.9"
+                    android:gravity="center_vertical"
+                    android:text="Pick Date" />
+
+            </LinearLayout>
+
+
+
+            <com.wondercars.executiveridetracker.CustomClasses.ExpandableHeightGridView
+                android:id="@+id/gridv_timeslots"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:horizontalSpacing="10dp"
+                android:numColumns="2"
+                android:verticalSpacing="10dp">
+
+            </com.wondercars.executiveridetracker.CustomClasses.ExpandableHeightGridView>
+
+            <Button
+                android:id="@+id/button_book_slot"
+                style="@style/text_style_white_normal_20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="@dimen/activity_margin_10dp"
+                android:layout_marginTop="@dimen/activity_margin_5dp"
+                android:background="@drawable/blue_rectangle_with_circular_corners"
+                android:gravity="center"
+                android:paddingLeft="@dimen/size_50dp"
+                android:paddingRight="@dimen/size_50dp"
+                android:text="Book"
+                android:textAllCaps="true" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

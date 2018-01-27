@@ -1,0 +1,3 @@
+include ':app'
+include ':accl'
+project(':accl').projectDir=new File('/home/acer/Music/AndroidProjects/SavyProjects/LibraryProject/accl')

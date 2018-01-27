@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/blue_rectangle_with_circular_corners" android:state_checked="true" />
+    <item android:drawable="@drawable/blue_rectangle_with_circular_corners" android:state_selected="true" />
+    <item android:drawable="@color/layout_background" android:state_focused="false" android:state_pressed="true" />
+    <item android:drawable="@drawable/gray_border_rectangle_with_smallcurve_corners" />
+</selector>
+

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context="com.wondercars.executiveridetracker.Activities.EnterCustomerDetailsActivity">
+
+    <include
+        layout="@layout/common_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_margin_20dp"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+            style="@style/text_style_primaryColor_normal_20dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:gravity="center_vertical"
+            android:text="Type of Ride" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.08"
+            android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/spinner_type_of_ride"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </Spinner>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_customerDetails"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.82"
+            android:orientation="vertical">
+
+            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:gravity="center_vertical"
+                android:text="Enquiry Number" />
+
+            <EditText
+                android:id="@+id/et_enquirynumber"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.07"
+                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners" />
+
+            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:gravity="center_vertical"
+                android:text="Customer Name" />
+
+            <EditText
+                android:id="@+id/et_customername"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.07"
+                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners" />
+
+            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:gravity="center_vertical"
+                android:text="Customer Mobile Number" />
+
+            <EditText
+                android:id="@+id/et_customerMobileNumber"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.07"
+                android:maxLength="10"
+                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners" />
+
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"></View>
+
+            <Button
+                android:id="@+id/button_next"
+                style="@style/text_style_white_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_weight="0.1"
+                android:background="@drawable/blue_rectangle_with_circular_corners"
+                android:text="Next" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:gravity="top"
+    android:layout_margin="@dimen/activity_margin_20dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:gravity="top"
+        android:layout_gravity="top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_margin_10dp"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+
+        <com.wondercars.executiveridetracker.CustomClasses.MuseosanNormalTextView
+            style="@style/text_style_primaryColor_normal_20dp"
+            android:layout_marginTop="@dimen/activity_margin_10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Variant" />
+
+        <RadioGroup
+            android:id="@+id/rg_select_variant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_margin_10dp">
+
+            <RadioButton
+                android:id="@+id/rb_alpha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Alpha" />
+
+            <RadioButton
+                android:id="@+id/rb_delta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delta" />
+
+            <RadioButton
+                android:id="@+id/rb_sigma"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sigma" />
+
+            <RadioButton
+                android:id="@+id/rb_zeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Zeta" />
+
+        </RadioGroup>
+
+        <com.wondercars.executiveridetracker.CustomClasses.MuseosanNormalTextView
+            style="@style/text_style_primaryColor_normal_20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_margin_10dp"
+            android:text="Car Mode" />
+
+
+        <RadioGroup
+            android:id="@+id/rg_car_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_margin_10dp">
+
+            <RadioButton
+                android:id="@+id/rb_automatic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Automatic" />
+
+            <RadioButton
+                android:id="@+id/rb_manual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Manual" />
+        </RadioGroup>
+
+        <com.wondercars.executiveridetracker.CustomClasses.MuseosanNormalTextView
+            style="@style/text_style_primaryColor_normal_20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_margin_10dp"
+            android:text="Fuel Type" />
+
+
+        <RadioGroup
+            android:id="@+id/rg_fuel_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_margin_10dp">
+
+            <RadioButton
+                android:id="@+id/rb_diesel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Diesel" />
+
+            <RadioButton
+                android:id="@+id/rb_petrol"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Petrol" />
+        </RadioGroup>
+
+
+        <Button
+            android:id="@+id/button_apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/activity_margin_10dp"
+            android:background="@drawable/blue_rectangle_with_circular_corners"
+            android:text="Apply"
+            android:layout_marginBottom="@dimen/activity_margin_10dp"/>
+
+    </LinearLayout>
+</LinearLayout>

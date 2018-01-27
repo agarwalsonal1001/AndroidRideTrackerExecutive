@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="activity_margin_10dp">10dp</dimen>
+    <dimen name="activity_margin_20dp">20dp</dimen>
+    <dimen name="activity_margin_5dp">5dp</dimen>
+    <dimen name="size_50dp">50dp</dimen>
+    <dimen name="size_60dp">60dp</dimen>
+
+
+    <!--Text Sizes-->
+    <dimen name="text_size_10dp">10dp</dimen>
+    <dimen name="text_size_12dp">12dp</dimen>
+    <dimen name="text_size_14dp">14dp</dimen>
+    <dimen name="text_size_16dp">16dp</dimen>
+    <dimen name="text_size_18dp">18dp</dimen>
+    <dimen name="text_size_20dp">20dp</dimen>
+    <dimen name="text_size_22dp">22dp</dimen>
+    <dimen name="text_size_24dp">24dp</dimen>
+    <dimen name="text_size_44dp">44dp</dimen>
+    <dimen name="text_size_48dp">48dp</dimen>
+    <dimen name="text_size_82dp">82dp</dimen>
+
+</resources>
