@@ -22,6 +22,11 @@ public interface APIConstants {
         String GET_SLOTS_API = "/getSlots";
         String UPSERT_SLOTS_API = "/upsertSlot";
         String UPSERT_RIDE_API ="/upsertRide";
+        String UPSERT_TEST_DRIVE ="/upsertTestDrive";
+        String SEND_OTP_TO_CUSTOMER = "/sendOTPtoCustomer";
+        String VALIDATE_OTP = "/validateOtp";
+        String GET_AVAILABLE_TIMESLOTS ="/getAvailableTimeSlots";
+        String VIEW_ALL_RIDES = "/viewAllRides";
     }
 
 

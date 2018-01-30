@@ -1,23 +1,15 @@
-package com.wondercars.executiveridetracker.Retrofit.DTOs.GetSlotsDTOs;
+package com.wondercars.executiveridetracker.Retrofit.DTOs.GetAvailableSlots;
 
 /**
- * Created by acer on 21/1/18.
+ * Created by acer on 28/1/18.
  */
 
-public class GetSlotsRequestObj {
+public class GetAvailableSlotsRequestObj {
 
     String carId;
+    String uid;
     String bookingDate;
     String admin_uid;
-    String uid;
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
 
     public String getCarId() {
         return carId;
@@ -25,6 +17,14 @@ public class GetSlotsRequestObj {
 
     public void setCarId(String carId) {
         this.carId = carId;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getBookingDate() {

@@ -147,18 +147,88 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/activity_margin_5dp"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/text_style_primaryColor_normal_20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="From Time" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/activity_margin_5dp"
+                        android:layout_marginTop="@dimen/activity_margin_10dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+                        android:orientation="vertical">
+
+                        <Spinner
+                            android:id="@+id/spinner_select_from_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                        </Spinner>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/activity_margin_5dp"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/text_style_primaryColor_normal_20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="To Time" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_margin_5dp"
+                        android:layout_marginTop="@dimen/activity_margin_10dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+                        android:orientation="vertical">
+
+                        <Spinner
+                            android:id="@+id/spinner_select_to_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                        </Spinner>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
 
             <com.wondercars.executiveridetracker.CustomClasses.ExpandableHeightGridView
                 android:id="@+id/gridv_timeslots"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
                 android:horizontalSpacing="10dp"
                 android:numColumns="2"
-                android:verticalSpacing="10dp">
+                android:verticalSpacing="10dp"
+                android:visibility="gone">
 
             </com.wondercars.executiveridetracker.CustomClasses.ExpandableHeightGridView>
 
@@ -169,7 +239,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
                 android:layout_marginBottom="@dimen/activity_margin_10dp"
-                android:layout_marginTop="@dimen/activity_margin_5dp"
+                android:layout_marginTop="@dimen/activity_margin_20dp"
                 android:background="@drawable/blue_rectangle_with_circular_corners"
                 android:gravity="center"
                 android:paddingLeft="@dimen/size_50dp"

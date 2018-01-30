@@ -253,6 +253,7 @@ public class StartTestDriveActivity extends BaseActivity implements OnMapReadyCa
                     upsertTestDriveRequestObj.setCustomer_mobile(upsertRideRequestObj.getCustomerMobile());
                     upsertTestDriveRequestObj.setCustomer_name(upsertRideRequestObj.getCustomerName());
                     upsertTestDriveRequestObj.setUid(upsertRideRequestObj.getUid());
+                    upsertTestDriveRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_TESTDRIVE_ID));
                     long timeTraveled = System.currentTimeMillis() - ExecutiveRideTrackerApplicationClass.startTestDriveTime;
                     String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(timeTraveled),
                             TimeUnit.MILLISECONDS.toMinutes(timeTraveled) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeTraveled)),
@@ -269,7 +270,7 @@ public class StartTestDriveActivity extends BaseActivity implements OnMapReadyCa
     private void callUpsertRideAPI(UpsertTestDriveRequestObj upsertRideRequestObj, int serviceid) {
         RetrofitParamsDTO retrofitParamsDTO = new RetrofitParamsDTO.RetrofitBuilder(this,
                 APIConstants.baseurl, upsertRideRequestObj, UpsertTestDriveResponseObj.class,
-                APIConstants.RetrofitMethodConstants.UPSERT_RIDE_API, serviceid, Constants.ApiMethods.POST_METHOD, retrofitInterface)
+                APIConstants.RetrofitMethodConstants.UPSERT_TEST_DRIVE, serviceid, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
                 .build();
@@ -288,6 +289,7 @@ public class StartTestDriveActivity extends BaseActivity implements OnMapReadyCa
                         if (upsertRideResponseObj.getStatus().getStatusCode() == SUCCESS) {
                             showShortToast("Test Drive Stopped successfully");
                             PreferenceManager.writeString(PreferenceManager.PREF_RIDECUSTOMER_IFO, "");
+                            PreferenceManager.writeString(PreferenceManager.PREF_TESTDRIVE_ID, "");
                             callActivity(NavigationActivity.class);
                             finish();
                         } else if (upsertRideResponseObj.getStatus().getStatusCode() == FAILURE) {
@@ -411,8 +413,12 @@ public class StartTestDriveActivity extends BaseActivity implements OnMapReadyCa
             if (mCurrLocationMarker != null) {
                 mCurrLocationMarker.remove();
             }
-            if (startAndEndLocation.size() == 0)
+            if (startAndEndLocation.size() == 0) {
                 startAndEndLocation.add("" + location.getLatitude() + "," + location.getLongitude());
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+            }
             //Place current location marker
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             MarkerOptions markerOptions = new MarkerOptions();

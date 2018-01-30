@@ -41,7 +41,10 @@
         <activity android:name=".Activities.LoginActivity" />
         <activity android:name=".Activities.EnterCustomerDetailsActivity" />
         <activity android:name=".Activities.StartRideActivity" />
-        <activity android:name=".Activities.StartTestDriveActivity"></activity>
+        <activity android:name=".Activities.StartTestDriveActivity" />
+        <activity android:name=".Activities.ManageSlotsActivity" />
+        <activity android:name=".Activities.EnterOtpActivity" />
+        <activity android:name=".Activities.ViewAllRidesActivity"></activity>
     </application>
 
 </manifest>

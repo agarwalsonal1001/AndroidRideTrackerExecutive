@@ -58,27 +58,29 @@ public class NavigationActivity extends BaseActivity {
                 callActivity(BookSlotActivity.class);
                 break;
             case R.id.ll_manage_slots:
+
+                callActivity(ManageSlotsActivity.class);
                 break;
 
             case R.id.ll_start_testdrive:
-                if (!isEmpty(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO))) {
-                    Intent callDestinationActivity = new Intent(this, EnterCustomerDetailsActivity.class);
-                    callDestinationActivity.putExtra("CommingFromTestDriveOption", "CommingFromTestDriveOption");
-                    callDestinationActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(callDestinationActivity);
-                } else {
+                // if (!isEmpty(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO))) {
+                Intent callDestinationActivity = new Intent(this, EnterCustomerDetailsActivity.class);
+                callDestinationActivity.putExtra("CommingFromTestDriveOption", "CommingFromTestDriveOption");
+                startActivity(callDestinationActivity);
+              /*  } else {
                     showLongToast("Please enter customer details from Start Ride Option");
-                }
+                }*/
                 break;
             case R.id.ll_start_ride:
-                if (isEmpty(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO))) {
-                    callActivity(EnterCustomerDetailsActivity.class);
-                } else {
+                // if (isEmpty(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO))) {
+                callActivity(EnterCustomerDetailsActivity.class);
+               /* } else {
                     callActivity(StartRideActivity.class);
-                }
+                }*/
 
                 break;
             case R.id.ll_view_rides:
+                callActivity(ViewAllRidesActivity.class);
                 break;
         }
     }

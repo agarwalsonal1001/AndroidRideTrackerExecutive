@@ -1,11 +1,14 @@
 package com.wondercars.executiveridetracker.Retrofit.DTOs.GetSlotsDTOs;
 
+import com.wondercars.executiveridetracker.Retrofit.DTOs.GetCarsDTOs.CarDetailObj;
+
 /**
  * Created by acer on 21/1/18.
  */
 
 public class BookingSlotsObj {
 
+    String id;
     String carId;
     String uid;
     String admin_uid;
@@ -15,6 +18,23 @@ public class BookingSlotsObj {
     String activeFlg;
     boolean available = true;
     boolean selected = false;
+    CarsDetailObj car;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public CarsDetailObj getCar() {
+        return car;
+    }
+
+    public void setCar(CarsDetailObj car) {
+        this.car = car;
+    }
 
     public boolean isSelected() {
         return selected;

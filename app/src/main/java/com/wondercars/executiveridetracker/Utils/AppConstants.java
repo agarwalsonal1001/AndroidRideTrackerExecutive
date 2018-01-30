@@ -24,5 +24,7 @@ public interface AppConstants {
         String GET_ALL_SRM = "GET_ALL_SRM";
         String  GET_DESIGNATION_LIST = "GET_DESIGNATION_LIST";
         String TYPES_OF_RIDES = "TYPES_OF_RIDES";
+        String AVAILABLE_SLOTS_FROM_TIME = "AVAILABLE_SLOTS_FROM_TIME";
+        String AVAILABLE_SLOTS_TO_TIME = "AVAILABLE_SLOTS_TO_TIME";
     }
 }

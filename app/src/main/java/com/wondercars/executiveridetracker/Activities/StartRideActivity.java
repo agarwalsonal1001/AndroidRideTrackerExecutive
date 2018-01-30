@@ -236,7 +236,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                 if (view.getTag().toString().equalsIgnoreCase("startride")) {
                     if (validateRequestObject()) {
                         upsertRideRequestObj = (UpsertRideRequestObj) PreferenceManager.getStringToObject(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO), UpsertRideRequestObj.class);
-                        upsertRideRequestObj.setId("");
+                        upsertRideRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
                         String startLatLng[] = startAndEndLocation.get(0).split(",");
                         if (startLatLng.length > 1) {
                             upsertRideRequestObj.setStartLat(startLatLng[0]);
@@ -279,7 +279,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                         if (upsertRideResponseObj.getStatus().getStatusCode() == SUCCESS) {
                             buttonStartRide.setTag("stopride");
                             buttonStartRide.setText("Stop Ride");
-                            upsertRideRequestObj.setId(upsertRideResponseObj.getId());
+                            upsertRideRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
                         } else if (upsertRideResponseObj.getStatus().getStatusCode() == FAILURE) {
                             showShortToast(upsertRideResponseObj.getStatus().getErrorDescription());
                         }
@@ -290,6 +290,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                     if (upsertRideResponse != null && upsertRideResponse.getStatus() != null) {
                         if (upsertRideResponse.getStatus().getStatusCode() == SUCCESS) {
                             showShortToast("Ride stoped successfully");
+                            PreferenceManager.writeString(PreferenceManager.PREF_RIDE_ID, "");
                             callActivity(NavigationActivity.class);
                             finish();
                         } else if (upsertRideResponse.getStatus().getStatusCode() == FAILURE) {
@@ -309,6 +310,8 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
     private boolean validateRequestObject() {
         if (startAndEndLocation != null && startAndEndLocation.size() == 2) {
             return true;
+        } else {
+            showLongToast("Please select destination to Start a ride");
         }
 
         return false;
@@ -413,8 +416,12 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
             if (mCurrLocationMarker != null) {
                 mCurrLocationMarker.remove();
             }
-            if (startAndEndLocation.size() == 0)
+            if (startAndEndLocation.size() == 0) {
                 startAndEndLocation.add("" + location.getLatitude() + "," + location.getLongitude());
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+            }
             //Place current location marker
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             MarkerOptions markerOptions = new MarkerOptions();

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.wondercars.executiveridetracker.Application.ExecutiveRideTrackerApplicationClass;
@@ -89,5 +90,16 @@ public class BaseActivity extends AppCompatActivity {
         UUID uu = UUID.randomUUID();
         String uuid = uu.toString();
         return uuid;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

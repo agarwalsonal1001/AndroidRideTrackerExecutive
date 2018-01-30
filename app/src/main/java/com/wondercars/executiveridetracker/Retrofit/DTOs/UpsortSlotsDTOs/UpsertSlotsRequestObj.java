@@ -6,13 +6,31 @@ package com.wondercars.executiveridetracker.Retrofit.DTOs.UpsortSlotsDTOs;
 
 public class UpsertSlotsRequestObj {
 
+    private String id;
     private String carId;
     private String uid;
     private String fromTime;
     private String toTime;
     private String bookingDate;
     private String admin_uid;
+    private String activeFlg;
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getActiveFlg() {
+        return activeFlg;
+    }
+
+    public void setActiveFlg(String activeFlg) {
+        this.activeFlg = activeFlg;
+    }
 
     public String getCarId() {
         return carId;

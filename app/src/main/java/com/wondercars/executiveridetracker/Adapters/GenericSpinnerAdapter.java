@@ -14,6 +14,8 @@ import com.wondercars.executiveridetracker.Retrofit.DTOs.GetVeriantsDTOs.Veriant
 
 import java.util.List;
 
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.AVAILABLE_SLOTS_FROM_TIME;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.AVAILABLE_SLOTS_TO_TIME;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.CAR_MODELS;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.CAR_REGISTRATION_NUMBER;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.TYPES_OF_RIDES;
@@ -103,6 +105,12 @@ public class GenericSpinnerAdapter<T> extends ArrayAdapter<T> {
                 break;
             case TYPES_OF_RIDES:
                 label.setText(itemList.get(position).toString());
+                break;
+            case AVAILABLE_SLOTS_FROM_TIME:
+                label.setText(itemList.get(position) + ":00");
+                break;
+            case AVAILABLE_SLOTS_TO_TIME:
+                label.setText(itemList.get(position) + ":00");
                 break;
         }
 

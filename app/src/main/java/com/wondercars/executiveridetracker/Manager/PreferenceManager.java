@@ -26,6 +26,8 @@ public class PreferenceManager {
     public static final String PREF_INDIVISUAL_CONTACT_NUMBER = "PREF_INDIVISUAL_CONTACT_NUMBER";
     public static final String PREF_SESSION_ID = "PREF_SESSION_ID";
     public static final String PREF_RIDECUSTOMER_IFO = "PREF_RIDECUSTOMER_IFO";
+    public static final String PREF_RIDE_ID = "PREF_RIDE_ID";
+    public static final String PREF_TESTDRIVE_ID = "PREF_TESTDRIVE_ID";
     private static SharedPreferences pref;
 
     public static void setSharedPreferences(){

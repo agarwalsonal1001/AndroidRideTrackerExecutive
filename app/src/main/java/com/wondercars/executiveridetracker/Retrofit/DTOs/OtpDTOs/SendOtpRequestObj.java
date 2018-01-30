@@ -6,15 +6,15 @@ package com.wondercars.executiveridetracker.Retrofit.DTOs.OtpDTOs;
 
 public class SendOtpRequestObj {
 
-    String customerMonileNumber;
+    String customer_mobile;
     String id;
 
     public String getCustomerMonileNumber() {
-        return customerMonileNumber;
+        return customer_mobile;
     }
 
     public void setCustomerMonileNumber(String customerMonileNumber) {
-        this.customerMonileNumber = customerMonileNumber;
+        this.customer_mobile = customerMonileNumber;
     }
 
     public String getId() {
