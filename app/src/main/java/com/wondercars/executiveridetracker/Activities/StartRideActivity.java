@@ -53,6 +53,7 @@ import com.wondercars.executiveridetracker.Modules.Route;
 import com.wondercars.executiveridetracker.R;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertRideDTOs.UpsertRideRequestObj;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertRideDTOs.UpsertRideResponseObj;
+import com.wondercars.executiveridetracker.Services.MyService;
 import com.wondercars.executiveridetracker.Utils.APIConstants;
 
 import java.io.UnsupportedEncodingException;
@@ -280,6 +281,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                             buttonStartRide.setTag("stopride");
                             buttonStartRide.setText("Stop Ride");
                             upsertRideRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
+                            startService(new Intent(getApplicationContext(), MyService.class));
                         } else if (upsertRideResponseObj.getStatus().getStatusCode() == FAILURE) {
                             showShortToast(upsertRideResponseObj.getStatus().getErrorDescription());
                         }
@@ -287,6 +289,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                     break;
                 case END_RIDE_SERVICE_ID:
                     UpsertRideResponseObj upsertRideResponse = (UpsertRideResponseObj) object;
+                    stopService(new Intent(getApplicationContext(), MyService.class));
                     if (upsertRideResponse != null && upsertRideResponse.getStatus() != null) {
                         if (upsertRideResponse.getStatus().getStatusCode() == SUCCESS) {
                             showShortToast("Ride stoped successfully");

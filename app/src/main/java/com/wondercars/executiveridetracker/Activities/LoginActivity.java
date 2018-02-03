@@ -63,7 +63,7 @@ public class LoginActivity extends BaseActivity {
     private void callUserLoginApi() {
         RetrofitParamsDTO retrofitParamsDTO = new RetrofitParamsDTO.RetrofitBuilder(LoginActivity.this,
                 APIConstants.baseurl, getLoginApiRequestObject(), LoginResponseObj.class,
-                APIConstants.RetrofitMethodConstants.LOGIN_API, LOGIN_API, Constants.ApiMethods.POST_METHOD, retrofitInterface.get())
+                APIConstants.RetrofitMethodConstants.LOGIN_API, LOGIN_API, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
                 .build();
@@ -71,10 +71,8 @@ public class LoginActivity extends BaseActivity {
         // mUserRegistrationService.userLogin(retrofitParamsDTO, getLoginApiRequestObject());
     }
 
-    final ThreadLocal<RetrofitInterface> retrofitInterface = new ThreadLocal<RetrofitInterface>() {
-        @Override
-        protected RetrofitInterface initialValue() {
-            return new RetrofitInterface() {
+     RetrofitInterface retrofitInterface = new RetrofitInterface() {
+
                 @Override
                 public void onSuccess(Object object, int serviceId) {
 
@@ -110,8 +108,6 @@ public class LoginActivity extends BaseActivity {
                     showLongToast(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
                 }
             };
-        }
-    };
 
     private boolean validateFields() {
         if (TextUtils.isEmpty(edtEnterUsername.getText().toString())) {
