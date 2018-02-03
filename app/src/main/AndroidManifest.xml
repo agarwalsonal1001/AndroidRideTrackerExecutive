@@ -37,6 +37,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <meta-data
+            android:name="CLOUDINARY_URL"
+            android:value="cloudinary://@dy2cci0z9"/>
+
         <activity android:name=".Activities.BookSlotActivity" />
         <activity android:name=".Activities.LoginActivity" />
         <activity android:name=".Activities.EnterCustomerDetailsActivity" />
