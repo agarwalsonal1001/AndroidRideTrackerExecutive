@@ -49,4 +49,5 @@ dependencies {
     compile 'com.squareup.retrofit2:parent:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
     implementation files('libs/accl.jar')
+    compile group: 'com.cloudinary', name: 'cloudinary-android', version: '1.20.0'
 }
