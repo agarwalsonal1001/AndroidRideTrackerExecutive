@@ -283,7 +283,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                             upsertRideRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
                             startService(new Intent(getApplicationContext(), MyService.class));
                         } else if (upsertRideResponseObj.getStatus().getStatusCode() == FAILURE) {
-                            showShortToast(upsertRideResponseObj.getStatus().getErrorDescription());
+                            showSnackBar(upsertRideResponseObj.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -292,12 +292,12 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                     stopService(new Intent(getApplicationContext(), MyService.class));
                     if (upsertRideResponse != null && upsertRideResponse.getStatus() != null) {
                         if (upsertRideResponse.getStatus().getStatusCode() == SUCCESS) {
-                            showShortToast("Ride stoped successfully");
+                            showSnackBar("Ride stoped successfully");
                             PreferenceManager.writeString(PreferenceManager.PREF_RIDE_ID, "");
                             callActivity(NavigationActivity.class);
                             finish();
                         } else if (upsertRideResponse.getStatus().getStatusCode() == FAILURE) {
-                            showShortToast(upsertRideResponse.getStatus().getErrorDescription());
+                            showSnackBar(upsertRideResponse.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -314,7 +314,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
         if (startAndEndLocation != null && startAndEndLocation.size() == 2) {
             return true;
         } else {
-            showLongToast("Please select destination to Start a ride");
+            showSnackBar("Please select destination to Start a ride");
         }
 
         return false;
@@ -476,7 +476,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
         endPoint.setLatitude(17.375775);
         endPoint.setLongitude(78.469218);*/
 
-        showLongToast(startPoint.distanceTo(endPoint) / 1000 + "");
+        showSnackBar(startPoint.distanceTo(endPoint) / 1000 + "");
         return startPoint.distanceTo(endPoint) / 1000;
     }
 

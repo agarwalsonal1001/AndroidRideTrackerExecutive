@@ -39,7 +39,7 @@
 
         <activity android:name=".Activities.BookSlotActivity" />
         <activity android:name=".Activities.LoginActivity" />
-        <activity android:name=".Activities.EnterCustomerDetailsActivity" />
+        <activity android:name=".Activities.EnterCustomerDetailsActivityOld" />
         <activity android:name=".Activities.StartRideActivity" />
         <activity android:name=".Activities.StartTestDriveActivity" />
         <activity android:name=".Activities.ManageSlotsActivity" />
@@ -49,7 +49,10 @@
         <service
             android:name=".Services.MyService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".Activities.CustomerListActivity" />
+        <activity android:name=".Activities.EnterCustomerDetailActivity"></activity>
     </application>
 
 </manifest>

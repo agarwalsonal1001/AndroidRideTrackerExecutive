@@ -5,6 +5,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -15,8 +18,6 @@ import com.wondercars.executiveridetracker.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static android.text.TextUtils.isEmpty;
 
 public class NavigationActivity extends BaseActivity {
 
@@ -50,6 +51,30 @@ public class NavigationActivity extends BaseActivity {
         finishAffinity();
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.navigation_options_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.logout:
+                PreferenceManager.clearAllPreference();
+                callActivity(LoginActivity.class);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     //
     @OnClick({R.id.ll_book_slot, R.id.ll_manage_slots, R.id.ll_start_ride, R.id.ll_view_rides, R.id.ll_start_testdrive})
     public void onClick(View view) {
@@ -58,13 +83,12 @@ public class NavigationActivity extends BaseActivity {
                 callActivity(BookSlotActivity.class);
                 break;
             case R.id.ll_manage_slots:
-
                 callActivity(ManageSlotsActivity.class);
                 break;
 
             case R.id.ll_start_testdrive:
                 // if (!isEmpty(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO))) {
-                Intent callDestinationActivity = new Intent(this, EnterCustomerDetailsActivity.class);
+                Intent callDestinationActivity = new Intent(this, EnterCustomerDetailsActivityOld.class);
                 callDestinationActivity.putExtra("CommingFromTestDriveOption", "CommingFromTestDriveOption");
                 startActivity(callDestinationActivity);
               /*  } else {
@@ -73,7 +97,7 @@ public class NavigationActivity extends BaseActivity {
                 break;
             case R.id.ll_start_ride:
                 // if (isEmpty(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO))) {
-                callActivity(EnterCustomerDetailsActivity.class);
+                callActivity(EnterCustomerDetailsActivityOld.class);
                /* } else {
                     callActivity(StartRideActivity.class);
                 }*/

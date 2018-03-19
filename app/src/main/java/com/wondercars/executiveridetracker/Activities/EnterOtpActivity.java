@@ -27,6 +27,7 @@ import umer.accl.retrofit.RetrofitParamsDTO;
 import umer.accl.utils.Constants;
 
 import static android.text.TextUtils.isEmpty;
+import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.ERROR;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.FAILURE;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
 
@@ -47,6 +48,7 @@ public class EnterOtpActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_otp);
         ButterKnife.bind(this);
+        setActionBar(toolbar,"Enter OTP");
     }
 
     @OnClick({R.id.iv_resendOtp, R.id.button_validate})
@@ -57,7 +59,7 @@ public class EnterOtpActivity extends BaseActivity {
                 break;
             case R.id.button_validate:
                 if (isEmpty(etOtp.getText().toString())) {
-                    showShortToast("Please enter otp");
+                    showLongSnackBar("Please enter otp");
                 } else {
                     callValidateOTPAPI();
 
@@ -116,10 +118,10 @@ public class EnterOtpActivity extends BaseActivity {
                     SendOtpResponseObj sendOtpResponseObj = (SendOtpResponseObj) object;
                     if (sendOtpResponseObj != null && sendOtpResponseObj.getStatus() != null) {
                         if (sendOtpResponseObj.getStatus().getStatusCode() == SUCCESS) {
-                            showShortToast("OTP send to customer mobile number successfully");
+                            showSnackBar("OTP send to customer mobile number successfully");
                         } else if (sendOtpResponseObj.getStatus().getStatusCode() == FAILURE) {
 
-                            showShortToast(sendOtpResponseObj.getStatus().getErrorDescription());
+                            showSnackBar(sendOtpResponseObj.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -127,12 +129,12 @@ public class EnterOtpActivity extends BaseActivity {
                 case VALIDATE_OTP_SERVICE_ID:
                     ValidateOtpResponseObj validateOtpResponseObj = (ValidateOtpResponseObj) object;
                     if (validateOtpResponseObj != null && validateOtpResponseObj.getStatus() != null) {
-                        if (validateOtpResponseObj.getStatus().getStatusCode() == SUCCESS) {
-                            showShortToast("OTP validated successfully");
+                        if (validateOtpResponseObj.getStatus().getStatusCode() == SUCCESS && validateOtpResponseObj.isValid()) {
+                            showSnackBar("OTP validated successfully");
                             callActivity(StartTestDriveActivity.class);
-                        } else if (validateOtpResponseObj.getStatus().getStatusCode() == FAILURE) {
+                        } else if (validateOtpResponseObj.getStatus().getStatus().equalsIgnoreCase(ERROR)) {
 
-                            showShortToast(validateOtpResponseObj.getStatus().getErrorDescription());
+                            showSnackBar(validateOtpResponseObj.getStatus().getErrorDescription());
                         }
                     }
                     break;

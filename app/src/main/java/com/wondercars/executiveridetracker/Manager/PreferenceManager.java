@@ -30,8 +30,8 @@ public class PreferenceManager {
     public static final String PREF_TESTDRIVE_ID = "PREF_TESTDRIVE_ID";
     private static SharedPreferences pref;
 
-    public static void setSharedPreferences(){
-         pref = ExecutiveRideTrackerApplicationClass.getInstance().getApplicationContext().getSharedPreferences(APP_ID,
+    public static void setSharedPreferences() {
+        pref = ExecutiveRideTrackerApplicationClass.getInstance().getApplicationContext().getSharedPreferences(APP_ID,
                 WORLD_READABLE);
     }
 
@@ -46,21 +46,21 @@ public class PreferenceManager {
         editor.commit();
     }
 
-    public static String readString( String key) {
+    public static String readString(String key) {
         return pref.getString(key, "");
     }
 
-    public static void writeString( String key, String val) {
+    public static void writeString(String key, String val) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(key, val);
         editor.commit();
     }
 
-    public static int readInteger( String key) {
+    public static int readInteger(String key) {
         return pref.getInt(key, 0);
     }
 
-    public static void writeInteger( String key, int val) {
+    public static void writeInteger(String key, int val) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putInt(key, val);
         editor.commit();
@@ -77,4 +77,8 @@ public class PreferenceManager {
         return mObject;
     }
 
+    public static void clearAllPreference() {
+        //SharedPreferences preferences = pref.c
+        pref.edit().clear().commit();
+    }
 }

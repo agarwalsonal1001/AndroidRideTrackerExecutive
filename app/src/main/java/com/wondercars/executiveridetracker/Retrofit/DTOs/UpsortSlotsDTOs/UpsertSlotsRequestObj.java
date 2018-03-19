@@ -1,36 +1,22 @@
 package com.wondercars.executiveridetracker.Retrofit.DTOs.UpsortSlotsDTOs;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by acer on 22/1/18.
  */
 
-public class UpsertSlotsRequestObj {
+public class UpsertSlotsRequestObj implements Serializable {
 
-    private String id;
     private String carId;
     private String uid;
     private String fromTime;
     private String toTime;
     private String bookingDate;
     private String admin_uid;
-    private String activeFlg;
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getActiveFlg() {
-        return activeFlg;
-    }
-
-    public void setActiveFlg(String activeFlg) {
-        this.activeFlg = activeFlg;
-    }
+    private List<String> customerIDs = new ArrayList<String>();
 
     public String getCarId() {
         return carId;
@@ -72,11 +58,19 @@ public class UpsertSlotsRequestObj {
         this.bookingDate = bookingDate;
     }
 
-    public String getAdminUid() {
+    public String getAdmin_uid() {
         return admin_uid;
     }
 
-    public void setAdminUid(String adminUid) {
-        this.admin_uid = adminUid;
+    public void setAdmin_uid(String admin_uid) {
+        this.admin_uid = admin_uid;
+    }
+
+    public List<String> getCustomerIDs() {
+        return customerIDs;
+    }
+
+    public void setCustomerIDs(List<String> customerIDs) {
+        this.customerIDs = customerIDs;
     }
 }

@@ -23,6 +23,8 @@ public interface APIConstants {
         String UPSERT_SLOTS_API = "/upsertSlot";
         String UPSERT_RIDE_API ="/upsertRide";
         String UPSERT_TEST_DRIVE ="/upsertTestDrive";
+        String UPSERT_CUSTOMER_API ="/upsertCustomer";
+        String GET_CUSTOMER_LIST_API ="/getCustomers";
         String SEND_OTP_TO_CUSTOMER = "/sendOTPtoCustomer";
         String VALIDATE_OTP = "/validateOtp";
         String GET_AVAILABLE_TIMESLOTS ="/getAvailableTimeSlots";
@@ -34,6 +36,7 @@ public interface APIConstants {
 
         int SUCCESS =1;
         int FAILURE = 0;
+        String ERROR = "ERROR";
     }
 }
 

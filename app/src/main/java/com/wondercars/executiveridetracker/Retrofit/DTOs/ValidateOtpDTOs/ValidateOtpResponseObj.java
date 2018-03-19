@@ -9,6 +9,7 @@ import com.wondercars.executiveridetracker.Retrofit.DTOs.Status;
 public class ValidateOtpResponseObj {
 
     Status status;
+    boolean isValid;
     String id;
 
     public Status getStatus() {
@@ -17,6 +18,14 @@ public class ValidateOtpResponseObj {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
     }
 
     public String getId() {

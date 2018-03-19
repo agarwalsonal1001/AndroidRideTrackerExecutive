@@ -1,6 +1,7 @@
 package com.wondercars.executiveridetracker.Activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -49,6 +50,7 @@ import umer.accl.retrofit.RetrofitParamsDTO;
 import umer.accl.utils.Constants;
 import umer.accl.utils.DateUtils;
 
+import static android.text.TextUtils.isEmpty;
 import static com.wondercars.executiveridetracker.Adapters.GridViewAdapter.numberOfSelectedSlots;
 import static com.wondercars.executiveridetracker.Application.ExecutiveRideTrackerApplicationClass.getTimeSlotsList;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.FAILURE;
@@ -76,8 +78,8 @@ public class BookSlotActivity extends BaseActivity {
     Spinner spinnerSelectVariant;
     @BindView(R.id.spinner_select_registration_number)
     Spinner spinnerSelectRegistrationNumber;
-    @BindView(R.id.button_book_slot)
-    Button buttonBookSlot;
+    @BindView(R.id.button_next)
+    Button buttonNext;
     @BindView(R.id.ll_pick_date)
     LinearLayout llPickDate;
     @BindView(R.id.tv_selected_date)
@@ -101,7 +103,7 @@ public class BookSlotActivity extends BaseActivity {
         setContentView(R.layout.activity_book_slot);
         ButterKnife.bind(this);
         init();
-        setActionBar(toolbar, "Book Slot");
+        setActionBar(toolbar, "Select Slot");
     }
 
     private void init() {
@@ -211,7 +213,7 @@ public class BookSlotActivity extends BaseActivity {
 
         UpsertSlotsRequestObj upsertSlotsRequestObj = new UpsertSlotsRequestObj();
         try {
-            upsertSlotsRequestObj.setAdminUid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
+            upsertSlotsRequestObj.setAdmin_uid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
             upsertSlotsRequestObj.setBookingDate(DateUtils.formatStringDateFromOneToAnother(tvSelectedDate.getText().toString(), DD_MMM_YYYY_DASH_DATE_FORMAT, DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT));
             upsertSlotsRequestObj.setCarId(carId);
             upsertSlotsRequestObj.setUid(PreferenceManager.readString(PreferenceManager.PREF_INDIVISUAL_ID));
@@ -285,7 +287,7 @@ public class BookSlotActivity extends BaseActivity {
 
 
                         } else if (responseObj.getStatus().getStatusCode() == FAILURE) {
-                            showLongToast(responseObj.getStatus().getErrorDescription());
+                            showSnackBar(responseObj.getStatus().getErrorDescription());
                         }
                     }
 
@@ -322,7 +324,7 @@ public class BookSlotActivity extends BaseActivity {
 
                                 }
                             } else if (carModelsResponseObject.getStatus().getStatusCode() == FAILURE) {
-                                showLongToast(carModelsResponseObject.getStatus().getErrorDescription());
+                                showSnackBar(carModelsResponseObject.getStatus().getErrorDescription());
                             }
                         }
 
@@ -363,10 +365,10 @@ public class BookSlotActivity extends BaseActivity {
                                     GenericSpinnerAdapter genericSpinnerAdapter = new GenericSpinnerAdapter(BookSlotActivity.this, 1,
                                             new ArrayList<CarDetailObj>(), CAR_REGISTRATION_NUMBER);
                                     spinnerSelectRegistrationNumber.setAdapter(genericSpinnerAdapter);
-                                    showShortToast("No car available");
+                                    showSnackBar("No car available");
                                 }
                             } else if (getCarsResponseObj.getStatus().getStatusCode() == FAILURE) {
-                                showLongToast(getCarsResponseObj.getStatus().getErrorDescription());
+                                showSnackBar(getCarsResponseObj.getStatus().getErrorDescription());
                             }
                         }
 //                        //
@@ -403,7 +405,7 @@ public class BookSlotActivity extends BaseActivity {
                                     gridvTimeslots.setVisibility(View.GONE);
                                     //   GridViewAdapter gridViewAdapter = new GridViewAdapter(BookSlotActivity.this, getTimeSlotsList());
                                     gridvTimeslots.setAdapter(null);
-                                    showShortToast("No Slot available");
+                                    showSnackBar("No Slot available");
                                 }*/
                                 gridvTimeslots.setVisibility(View.VISIBLE);
                                 GridViewAdapter gridViewAdapter = new GridViewAdapter(BookSlotActivity.this, slotsList /*getSlotsResponseObj.getBookingSlots()*/);
@@ -422,7 +424,7 @@ public class BookSlotActivity extends BaseActivity {
                                                 numberOfSelectedSlots = numberOfSelectedSlots + 1;
                                                 bookingSlotsObjHashMap.put(position, (BookingSlotsObj) ((GridViewAdapter) parent.getAdapter()).getListOfData().get(position));
                                             } else {
-                                                showShortToast("You can select maximum two slots");
+                                                showSnackBar("You can select maximum two slots");
                                             }
                                         }
                                         ((GridViewAdapter) parent.getAdapter()).notifyDataSetChanged();
@@ -441,11 +443,16 @@ public class BookSlotActivity extends BaseActivity {
                     UpsertSlotsResponseObj getSlotsResponseObj = (UpsertSlotsResponseObj) object;
                     if (getSlotsResponseObj != null && getSlotsResponseObj.getStatus() != null) {
                         if (getSlotsResponseObj.getStatus().getStatusCode() == SUCCESS) {
-                            showLongToast("Slot booked Successfully");
-                            callActivity(NavigationActivity.class);
-                            finish();
+                            showSnackBar("Slot booked Successfully", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    callActivity(NavigationActivity.class);
+                                    finish();
+                                }
+                            });
+
                         } else {
-                            showShortToast(getSlotsResponseObj.getStatus().getErrorDescription());
+                            showSnackBar(getSlotsResponseObj.getStatus().getErrorDescription());
                         }
                     }
 
@@ -503,35 +510,59 @@ public class BookSlotActivity extends BaseActivity {
 
         @Override
         public void onError(int serviceId) {
-            showLongToast(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
+            showSnackBar(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
         }
     };
 
 
-    @OnClick({R.id.ll_pick_date, R.id.button_book_slot})
+    @OnClick({R.id.ll_pick_date, R.id.button_next})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_pick_date:
                 DateUtils.showDatePicker(BookSlotActivity.this, R.style.datepicker, 2018, 0, 1, onDateSetListener);
                 break;
-            case R.id.button_book_slot:
-                if ((toTimeInInt - fromTimeInInt) > 2) {
-                    showLongToast("The time difference between 2 slots can not exceed 2 hours");
-                } else if (fromTimeInInt > toTimeInInt) {
-                    showLongToast("From-Time should be less than To-Time");
-                } else if(fromTimeInInt == toTimeInInt){
-                    showLongToast("To-Time should be greater than From-Time");
+            case R.id.button_next:
+                if (validateField()) {
+                    if ((toTimeInInt - fromTimeInInt) > 2) {
+                        showSnackBar("The time difference between 2 slots can not exceed 2 hours");
+                    } else if (fromTimeInInt > toTimeInInt) {
+                        showSnackBar("From-Time should be less than To-Time");
+                    } else if (fromTimeInInt == toTimeInInt) {
+                        showSnackBar("To-Time should be greater than From-Time");
 
-                } else {
-                    callUpsertSlotAPI();
+                    } else {
+                        Intent intent = new Intent(BookSlotActivity.this,CustomerListActivity.class);
+                        intent.putExtra("slotInfo",getUpsertSlotsRequestObj());
+                        startActivity(intent);
+                        //callUpsertSlotAPI();
+                    }
                 }
                 // if (bookingSlotsObjHashMap.size() > 0) {
 
                 /*} else {
-                    showLongToast("Please select slot");
+                    showSnackBar("Please select slot");
                 }*/
                 break;
         }
+    }
+
+    private boolean validateField() {
+
+        if (tvSelectedDate.getText().toString().equalsIgnoreCase("Pick Date") || isEmpty(tvSelectedDate.getText().toString())) {
+            showLongSnackBar("Date and Time fields can not be blank.");
+            return false;
+        }
+        if (isEmpty(toTime)) {
+            showLongSnackBar("Please select To Time.");
+            return false;
+        }
+
+        if (isEmpty(fromTime)) {
+            showLongSnackBar("Please select From Time.");
+            return false;
+        }
+
+        return true;
     }
 
     DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {

@@ -82,7 +82,7 @@ public class ViewAllRidesActivity extends BaseActivity {
                         recyclerView.setAdapter(viewAllRidesRecyclerAdapter);
                     }
                 } else {
-                    showShortToast(viewAllRidesResponseObj.getStatus().getErrorDescription());
+                    showSnackBar(viewAllRidesResponseObj.getStatus().getErrorDescription());
                 }
             }
 

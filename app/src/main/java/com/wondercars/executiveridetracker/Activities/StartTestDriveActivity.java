@@ -258,7 +258,7 @@ public class StartTestDriveActivity extends BaseActivity implements OnMapReadyCa
                     String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(timeTraveled),
                             TimeUnit.MILLISECONDS.toMinutes(timeTraveled) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeTraveled)),
                             TimeUnit.MILLISECONDS.toSeconds(timeTraveled) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeTraveled)));
-                    showLongToast(hms);
+                    showSnackBar(hms);
                     upsertTestDriveRequestObj.setTime_travelled(hms);
                     callUpsertRideAPI(upsertTestDriveRequestObj, START_RIDE_SERVICE_ID);
                 }
@@ -287,13 +287,13 @@ public class StartTestDriveActivity extends BaseActivity implements OnMapReadyCa
                     UpsertTestDriveResponseObj upsertRideResponseObj = (UpsertTestDriveResponseObj) object;
                     if (upsertRideResponseObj != null && upsertRideResponseObj.getStatus() != null) {
                         if (upsertRideResponseObj.getStatus().getStatusCode() == SUCCESS) {
-                            showShortToast("Test Drive Stopped successfully");
+                            showLongToast("Test Drive Stopped successfully");
                             PreferenceManager.writeString(PreferenceManager.PREF_RIDECUSTOMER_IFO, "");
                             PreferenceManager.writeString(PreferenceManager.PREF_TESTDRIVE_ID, "");
                             callActivity(NavigationActivity.class);
                             finish();
                         } else if (upsertRideResponseObj.getStatus().getStatusCode() == FAILURE) {
-                            showShortToast(upsertRideResponseObj.getStatus().getErrorDescription());
+                            showSnackBar(upsertRideResponseObj.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -470,7 +470,7 @@ public class StartTestDriveActivity extends BaseActivity implements OnMapReadyCa
         endPoint.setLatitude(17.375775);
         endPoint.setLongitude(78.469218);*/
 
-        showLongToast(startPoint.distanceTo(endPoint) / 1000 + "");
+        showSnackBar(startPoint.distanceTo(endPoint) / 1000 + "");
         return startPoint.distanceTo(endPoint) / 1000;
     }
 }

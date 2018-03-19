@@ -85,11 +85,11 @@ public class LoginActivity extends BaseActivity {
                                     PreferenceManager.writeBoolean(PREF_LOGIN_CURRENT_TAG, true);
                                     PreferenceManager.writeString(PREF_INDIVISUAL_ID, loginResponseObj.getUid());
                                     PreferenceManager.writeString(PREF_ADMIN_UID,loginResponseObj.getAdmin_uid());
-                                    showLongToast(LOGIN_SUCCESSFULLY);
+                                    showSnackBar(LOGIN_SUCCESSFULLY);
                                     callActivity(NavigationActivity.class);
                                     finish();
                                 } else if (loginResponseObj.getStatus().getStatusCode() == FAILURE) {
-                                    showLongToast(loginResponseObj.getStatus().getErrorDescription());
+                                    showSnackBar(loginResponseObj.getStatus().getErrorDescription());
                                 }
                             }
 
@@ -105,17 +105,17 @@ public class LoginActivity extends BaseActivity {
 
                 @Override
                 public void onError(int serviceId) {
-                    showLongToast(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
+                    showSnackBar(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
                 }
             };
 
     private boolean validateFields() {
         if (TextUtils.isEmpty(edtEnterUsername.getText().toString())) {
-            showShortToast(PLEASE_ENTER_EMAIL);
+            showSnackBar(PLEASE_ENTER_EMAIL);
             return false;
         }
         if (TextUtils.isEmpty(edtEnterPassword.getText().toString())) {
-            showShortToast(PLEASE_ENTER_PASSWORD);
+            showSnackBar(PLEASE_ENTER_PASSWORD);
             return false;
         }
 

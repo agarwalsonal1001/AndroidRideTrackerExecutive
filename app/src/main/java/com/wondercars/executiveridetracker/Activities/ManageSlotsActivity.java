@@ -142,10 +142,10 @@ public class ManageSlotsActivity extends BaseActivity {
                     UpsertSlotsResponseObj getManageSlotsResponseObj = (UpsertSlotsResponseObj) object;
                     if (getManageSlotsResponseObj != null && getManageSlotsResponseObj.getStatus() != null) {
                         if (getManageSlotsResponseObj.getStatus().getStatusCode() == SUCCESS) {
-                            showShortToast("Slot deleted Successfully");
+                            showLongSnackBar("Slot deleted Successfully");
                             callGetSlotAPI();
                         } else {
-                            showShortToast(getManageSlotsResponseObj.getStatus().getErrorDescription());
+                            showSnackBar(getManageSlotsResponseObj.getStatus().getErrorDescription());
                         }
                     }
 
@@ -157,7 +157,7 @@ public class ManageSlotsActivity extends BaseActivity {
 
         @Override
         public void onError(int serviceId) {
-            showLongToast(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
+            showSnackBar(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
         }
     };
 }
