@@ -11,6 +11,7 @@ import com.wondercars.executiveridetracker.BaseClasses.BaseActivity;
 import com.wondercars.executiveridetracker.CustomClasses.AppProgressDialog;
 import com.wondercars.executiveridetracker.Manager.PreferenceManager;
 import com.wondercars.executiveridetracker.R;
+import com.wondercars.executiveridetracker.Retrofit.DTOs.GetCustomersListDTOs.Customer;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertCustomerDetailsDTOs.UpsertCustomerDetailsRequestObj;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertCustomerDetailsDTOs.UpsertCustomerDetailsResponseObj;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertTestDriveDTOs.UpsertTestDriveResponseObj;
@@ -62,7 +63,7 @@ public class EnterCustomerDetailActivity extends BaseActivity {
         upsertCustomerDetailsRequestObj.setEnquiryNumber(etEnquirynumber.getText().toString());
         upsertCustomerDetailsRequestObj.setName(etCustomername.getText().toString());
         upsertCustomerDetailsRequestObj.setMobileNumber(etCustomerMobileNumber.getText().toString());
-        upsertCustomerDetailsRequestObj.setEmailID(etEmailID.getText().toString());
+        upsertCustomerDetailsRequestObj.setEmailID(etEmailID.getText().append("").toString());
         return upsertCustomerDetailsRequestObj;
     }
 
@@ -80,42 +81,54 @@ public class EnterCustomerDetailActivity extends BaseActivity {
 
     @OnClick({R.id.button_next, R.id.tv_somethingwrong})
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.button_next:
-                if (validateUpsertRideRequestObject()) {
-                    callUpsertCustomerDetailsApi();
-                }
-                break;
-            case R.id.tv_somethingwrong:
-                break;
+        try {
+            switch (view.getId()) {
+                case R.id.button_next:
+                    if (validateUpsertRideRequestObject()) {
+                        callUpsertCustomerDetailsApi();
+                    }
+                    break;
+                case R.id.tv_somethingwrong:
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private boolean validateUpsertRideRequestObject() {
 
-        if (isEmpty(etEnquirynumber.getText().toString())) {
-            showLongSnackBar("Please enter Customer Enquiry Number");
-            etEnquirynumber.setError("Please enter Customer Enquiry Number");
-            return false;
+        try {
+            if (isEmpty(etEnquirynumber.getText().toString())) {
+                showLongSnackBar("Please enter Customer Enquiry Number");
+                etEnquirynumber.setError("Please enter Customer Enquiry Number");
+                return false;
+            }
+
+            if (isEmpty(etCustomername.getText().toString())) {
+                etCustomername.setError("Please enter Customer Name");
+                showLongSnackBar("Please enter Customer Name");
+                return false;
+            }
+
+            if (isEmpty(etCustomerMobileNumber.getText().toString())) {
+                etCustomerMobileNumber.setError("Please enter Customer Mobile Number");
+                showLongSnackBar("Please enter Customer Mobile Number");
+                return false;
+            } else if (etCustomerMobileNumber.getText().toString().length() < 10) {
+                etCustomerMobileNumber.setError("Please enter correct Customer Mobile Number");
+                showLongSnackBar("Please enter correct Customer Mobile Number");
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        if (isEmpty(etCustomername.getText().toString())) {
-            etCustomername.setError("Please enter Customer Name");
-            showLongSnackBar("Please enter Customer Name");
-            return false;
-        }
-
-        if (isEmpty(etCustomerMobileNumber.getText().toString())) {
-            etCustomerMobileNumber.setError("Please enter Customer Mobile Number");
-            showLongSnackBar("Please enter Customer Mobile Number");
-            return false;
-        }
-
-        if (isEmpty(etEmailID.getText().toString())) {
+        /*if (isEmpty(etEmailID.getText().toString())) {
             showLongSnackBar("Please enter Customer Email ID");
-            etEnquirynumber.setError("Please enter Customer Email ID");
+            etEmailID.setError("Please enter Customer Email ID");
             return false;
-        }
+        }*/
         return true;
     }
 
@@ -129,7 +142,15 @@ public class EnterCustomerDetailActivity extends BaseActivity {
                         UpsertCustomerDetailsResponseObj upsertCustomerDetailsResponseObj = (UpsertCustomerDetailsResponseObj) obj;
                         if (upsertCustomerDetailsResponseObj != null && upsertCustomerDetailsResponseObj.getStatus() != null) {
                             if (upsertCustomerDetailsResponseObj.getStatus().getStatusCode() == SUCCESS) {
+                                Customer customer = new Customer();
+                                customer.setName(etCustomername.getText().toString());
+                                customer.setAdminUid(PreferenceManager.readString(PREF_ADMIN_UID));
+                                customer.setEmailID(etEmailID.getText().append("").toString());
+                                customer.setEnquiryNumber(etEnquirynumber.getText().toString());
+                                customer.setMobileNumber(etCustomerMobileNumber.getText().toString());
+                                customer.setCustomer_id(upsertCustomerDetailsResponseObj.getCustomer_id());
                                 showLongToast("Details saved successfully");
+                                CustomerListActivity.customerArrayList.add(customer);
                                 //CustomerListActivity.booking_id = upsertCustomerDetailsResponseObj.getBooking_id();
                                 onBackPressed();
                             }

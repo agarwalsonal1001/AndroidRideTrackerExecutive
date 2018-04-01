@@ -98,9 +98,19 @@ public class ExecutiveRideTrackerApplicationClass extends Application {
     public static ArrayList getTypesOfRide(){
         ArrayList<String> typesOfRide = new ArrayList<>();
         typesOfRide.add("Document Pick-up");
-        typesOfRide.add("Test Drive");
+        //typesOfRide.add("Test Drive");
         typesOfRide.add("Customer Visit");
         return typesOfRide;
     }
+
+
+    public static ArrayList getTypesOfVehicle(){
+        ArrayList<String> typesOfVehicle = new ArrayList<>();
+        typesOfVehicle.add("Own Vehicle");
+        //typesOfRide.add("Test Drive");
+        typesOfVehicle.add("Company Vehicle");
+        return typesOfVehicle;
+    }
+
 
 }

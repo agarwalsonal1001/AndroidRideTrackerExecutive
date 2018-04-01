@@ -10,13 +10,32 @@ import java.util.List;
 
 public class UpsertSlotsRequestObj implements Serializable {
 
+    private String id;
     private String carId;
     private String uid;
     private String fromTime;
     private String toTime;
     private String bookingDate;
     private String admin_uid;
+    private String activeFlag;
+
+    public String getActiveFlag() {
+        return activeFlag;
+    }
+
+    public void setActiveFlag(String activeFlag) {
+        this.activeFlag = activeFlag;
+    }
+
     private List<String> customerIDs = new ArrayList<String>();
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCarId() {
         return carId;

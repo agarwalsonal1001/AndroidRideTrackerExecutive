@@ -88,7 +88,7 @@ public class NavigationActivity extends BaseActivity {
 
             case R.id.ll_start_testdrive:
                 // if (!isEmpty(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO))) {
-                Intent callDestinationActivity = new Intent(this, EnterCustomerDetailsActivityOld.class);
+                Intent callDestinationActivity = new Intent(this, CustomerListActivity.class);
                 callDestinationActivity.putExtra("CommingFromTestDriveOption", "CommingFromTestDriveOption");
                 startActivity(callDestinationActivity);
               /*  } else {

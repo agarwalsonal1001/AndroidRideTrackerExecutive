@@ -20,24 +20,6 @@
         android:orientation="vertical"
         android:weightSum="1">
 
-
-            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
-                style="@style/text_style_primaryColor_normal_20dp"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.1"
-                android:gravity="center_vertical"
-                android:text="Customer Email ID" />
-
-
-            <EditText
-                android:id="@+id/et_emailID"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.08"
-                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
-                android:singleLine="true" />
-
             <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
@@ -88,8 +70,25 @@
                 android:numeric="integer"
                 android:singleLine="true" />
 
+        <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+            style="@style/text_style_primaryColor_normal_20dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:gravity="center_vertical"
+            android:text="Customer Email ID" />
 
-            <View
+
+        <EditText
+            android:id="@+id/et_emailID"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.08"
+            android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+            android:singleLine="true" />
+
+
+        <View
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="0.1"></View>

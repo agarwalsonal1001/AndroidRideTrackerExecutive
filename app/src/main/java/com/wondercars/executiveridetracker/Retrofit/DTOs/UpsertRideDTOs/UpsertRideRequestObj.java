@@ -9,14 +9,77 @@ public class UpsertRideRequestObj {
     private String uid;
     private String admin_uid;
     private String ride_type;
-    private String customer_enquiry_no;
-    private String customer_mobile;
-    private String customer_name;
+    private String customer_id;
     private String start_lat;
     private String start_long;
     private String end_lat;
     private String end_long;
     private String id;
+    private String vehicle_type;
+    private String vehicle_number;
+
+
+    //Not to send in APIs
+    private String name;
+    private String enquiryNumber;
+    private String mobileNumber;
+    private String emailID;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEnquiryNumber() {
+        return enquiryNumber;
+    }
+
+    public void setEnquiryNumber(String enquiryNumber) {
+        this.enquiryNumber = enquiryNumber;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public String getEmailID() {
+        return emailID;
+    }
+
+    public void setEmailID(String emailID) {
+        this.emailID = emailID;
+    }
+
+    public String getVehicle_type() {
+        return vehicle_type;
+    }
+
+    public void setVehicle_type(String vehicle_type) {
+        this.vehicle_type = vehicle_type;
+    }
+
+    public String getVehicle_number() {
+        return vehicle_number;
+    }
+
+    public void setVehicle_number(String vehicle_number) {
+        this.vehicle_number = vehicle_number;
+    }
+
+    public String getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(String customer_id) {
+        this.customer_id = customer_id;
+    }
 
     public String getCarId() {
         return carId;
@@ -48,30 +111,6 @@ public class UpsertRideRequestObj {
 
     public void setRideType(String ride_type) {
         this.ride_type = ride_type;
-    }
-
-    public String getCustomerEnquiryNo() {
-        return customer_enquiry_no;
-    }
-
-    public void setCustomerEnquiryNo(String customer_enquiry_no) {
-        this.customer_enquiry_no = customer_enquiry_no;
-    }
-
-    public String getCustomerMobile() {
-        return customer_mobile;
-    }
-
-    public void setCustomerMobile(String customer_mobile) {
-        this.customer_mobile = customer_mobile;
-    }
-
-    public String getCustomerName() {
-        return customer_name;
-    }
-
-    public void setCustomerName(String customer_name) {
-        this.customer_name = customer_name;
     }
 
     public String getStartLat() {

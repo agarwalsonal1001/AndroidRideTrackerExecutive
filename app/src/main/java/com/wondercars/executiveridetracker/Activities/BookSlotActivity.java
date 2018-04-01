@@ -103,7 +103,7 @@ public class BookSlotActivity extends BaseActivity {
         setContentView(R.layout.activity_book_slot);
         ButterKnife.bind(this);
         init();
-        setActionBar(toolbar, "Select Slot");
+        setActionBar(toolbar, "Book Test Drive Slot");
     }
 
     private void init() {
@@ -523,9 +523,10 @@ public class BookSlotActivity extends BaseActivity {
                 break;
             case R.id.button_next:
                 if (validateField()) {
-                    if ((toTimeInInt - fromTimeInInt) > 2) {
+                   /* if ((toTimeInInt - fromTimeInInt) > 2) {
                         showSnackBar("The time difference between 2 slots can not exceed 2 hours");
-                    } else if (fromTimeInInt > toTimeInInt) {
+                    } else*/
+                        if (fromTimeInInt > toTimeInInt) {
                         showSnackBar("From-Time should be less than To-Time");
                     } else if (fromTimeInInt == toTimeInInt) {
                         showSnackBar("To-Time should be greater than From-Time");

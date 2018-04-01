@@ -45,6 +45,7 @@
         <activity android:name=".Activities.ManageSlotsActivity" />
         <activity android:name=".Activities.EnterOtpActivity" />
         <activity android:name=".Activities.ViewAllRidesActivity" />
+        <activity android:name=".Activities.StartRideFromTestDriveOptionActivity"></activity>
 
         <service
             android:name=".Services.MyService"

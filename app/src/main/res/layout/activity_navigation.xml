@@ -45,7 +45,7 @@
                 android:weightSum="1">
 
                 <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
-                    style="@style/text_style_black_normal_24dp"
+                    style="@style/text_style_black_normal_22dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|center_horizontal"
@@ -80,7 +80,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|center_horizontal"
-                    style="@style/text_style_black_normal_24dp"
+                    style="@style/text_style_black_normal_22dp"
                     android:text="@string/manage_slots" />
             </LinearLayout>
 
@@ -112,7 +112,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/activity_margin_10dp"
                     android:gravity="center_vertical|center_horizontal"
-                    style="@style/text_style_black_normal_24dp"
+                    style="@style/text_style_black_normal_22dp"
                     android:text="@string/start_ride" />
 
             </LinearLayout>
@@ -144,8 +144,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/activity_margin_10dp"
                     android:gravity="center_vertical|center_horizontal"
-                    style="@style/text_style_black_normal_24dp"
-                    android:text="Start Test Drive" />
+                    style="@style/text_style_black_normal_22dp"
+                    android:text="Test Drive" />
 
             </LinearLayout>
 
@@ -177,7 +177,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/activity_margin_10dp"
                     android:gravity="center_vertical|center_horizontal"
-                    style="@style/text_style_black_normal_24dp"
+                    style="@style/text_style_black_normal_22dp"
                     android:text="@string/view_rides" />
 
             </LinearLayout>

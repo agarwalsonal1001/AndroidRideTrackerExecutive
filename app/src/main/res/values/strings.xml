@@ -5,9 +5,9 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">LOG IN</string>
-    <string name="start_ride">Start a Ride</string>
-    <string name="book_slot">Book a Slot</string>
+    <string name="start_ride">Customer Visit</string>
+    <string name="book_slot">Book Test Drive Slot</string>
     <string name="view_rides">View Rides</string>
-    <string name="manage_slots">Manage Slots</string>
+    <string name="manage_slots">Manage Test Drive Slots</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDqlbeEQpAUO8WMdngUJ6vtDZAQQhDJ25Y</string>
 </resources>

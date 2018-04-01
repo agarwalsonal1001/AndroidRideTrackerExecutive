@@ -72,7 +72,8 @@ public class EnterOtpActivity extends BaseActivity {
     private SendOtpRequestObj getSendOtpRequestObj() {
         UpsertRideRequestObj upsertRideRequestObj = (UpsertRideRequestObj) PreferenceManager.getStringToObject(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO), UpsertRideRequestObj.class);
         SendOtpRequestObj sendOtpRequestObj = new SendOtpRequestObj();
-        sendOtpRequestObj.setCustomerMonileNumber("91" + upsertRideRequestObj.getCustomerMobile());
+        sendOtpRequestObj.setCustomerMonileNumber("91" + upsertRideRequestObj.getMobileNumber());
+        sendOtpRequestObj.setCustomer_email(upsertRideRequestObj.getEmailID());
         sendOtpRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_TESTDRIVE_ID));
         return sendOtpRequestObj;
     }

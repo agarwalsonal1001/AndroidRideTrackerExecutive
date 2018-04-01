@@ -19,6 +19,7 @@ import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObj
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.CAR_MODELS;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.CAR_REGISTRATION_NUMBER;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.TYPES_OF_RIDES;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.TYPE_OF_VEHICLE;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.VERIANT_DETAILS;
 
 
@@ -111,6 +112,10 @@ public class GenericSpinnerAdapter<T> extends ArrayAdapter<T> {
                 break;
             case AVAILABLE_SLOTS_TO_TIME:
                 label.setText(itemList.get(position) + ":00");
+                break;
+
+            case TYPE_OF_VEHICLE:
+                label.setText(itemList.get(position).toString());
                 break;
         }
 

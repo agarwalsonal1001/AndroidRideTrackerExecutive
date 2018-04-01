@@ -16,18 +16,11 @@ import com.wondercars.executiveridetracker.BaseClasses.BaseActivity;
 import com.wondercars.executiveridetracker.CustomClasses.AppProgressDialog;
 import com.wondercars.executiveridetracker.Manager.PreferenceManager;
 import com.wondercars.executiveridetracker.R;
-import com.wondercars.executiveridetracker.Retrofit.DTOs.GetSlotsDTOs.BookingSlotsObj;
-import com.wondercars.executiveridetracker.Retrofit.DTOs.GetSlotsDTOs.GetSlotsRequestObj;
-import com.wondercars.executiveridetracker.Retrofit.DTOs.GetSlotsDTOs.GetSlotsResponseObj;
-import com.wondercars.executiveridetracker.Retrofit.DTOs.OtpDTOs.SendOtpRequestObj;
-import com.wondercars.executiveridetracker.Retrofit.DTOs.OtpDTOs.SendOtpResponseObj;
+import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertCustomerDetailsDTOs.UpsertCustomerDetailsRequestObj;
+import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertCustomerDetailsDTOs.UpsertCustomerDetailsResponseObj;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertRideDTOs.UpsertRideRequestObj;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertRideDTOs.UpsertRideResponseObj;
-import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertTestDriveDTOs.UpsertTestDriveRequestObj;
-import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertTestDriveDTOs.UpsertTestDriveResponseObj;
 import com.wondercars.executiveridetracker.Utils.APIConstants;
-
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,23 +28,21 @@ import butterknife.OnClick;
 import umer.accl.interfaces.RetrofitInterface;
 import umer.accl.retrofit.RetrofitParamsDTO;
 import umer.accl.utils.Constants;
-import umer.accl.utils.DateUtils;
 
 import static android.text.TextUtils.isEmpty;
 import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_ADMIN_UID;
 import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_INDIVISUAL_ID;
 import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_RIDECUSTOMER_IFO;
 import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_RIDE_ID;
-import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_TESTDRIVE_ID;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.FAILURE;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.TYPES_OF_RIDES;
-import static umer.accl.utils.DateUtils.DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT;
-import static umer.accl.utils.DateUtils.MMM_DD_YYYY_hh_mm_ss_a_DATE_FORMAT;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.TYPE_OF_VEHICLE;
 
 public class EnterCustomerDetailsActivityOld extends BaseActivity {
 
     private static final int UPSERT_RIDE_SERVICE_ID = 0, GET_SLOTS_SERVICE_ID = 1, SEND_OTP_SERVICE_ID = 4, UPSERT_TEST_DRIVE_SERVICE_ID = 5;
+    private static final int UPSERT_CUSTOMER_API_SERVICE_ID = 6;
     @BindView(R.id.spinner_type_of_ride)
     Spinner spinnerTypeOfRide;
     @BindView(R.id.et_enquirynumber)
@@ -62,18 +53,25 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
     EditText etCustomerMobileNumber;
     @BindView(R.id.button_next)
     Button buttonNext;
-    @BindView(R.id.ll_customerDetails)
-    LinearLayout llCustomerDetails;
-    String typeOfRideSelected = "", rideID = "";
+    @BindView(R.id.ll_type_of_vehicle)
+    LinearLayout llTypeOfVehicle;
+    String typeOfRideSelected = "", rideID = "",typeOfVehicleSelected="";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     UpsertRideRequestObj upsertRideRequestObj;
     String userObj;
     Intent intent;
-    @BindView(R.id.ll_typeOfRide)
-    LinearLayout llTypeOfRide;
+    /*@BindView(R.id.ll_typeOfRide)
+    LinearLayout llTypeOfRide;*/
     @BindView(R.id.tv_somethingwrong)
     TextView tvSomethingwrong;
+    @BindView(R.id.et_customerEmailId)
+    EditText etCustomerEmailId;
+    @BindView(R.id.spinner_type_of_vehicle)
+    Spinner spinnerTypeOfVehicle;
+    @BindView(R.id.et_vehiclenumber)
+    EditText etVehiclenumber;
+    private String customerID = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +98,11 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 typeOfRideSelected = ((String) ((GenericSpinnerAdapter) (parent.getAdapter())).getItemList().get(position));
-                if (typeOfRideSelected.equalsIgnoreCase("Test Drive")) {
-                    callGetSlotAPI();
-                } else {
-                    showOrHideCustomerDetailsLayout(true);
-                }
+//                if (typeOfRideSelected.equalsIgnoreCase("Test Drive")) {
+//                    callGetSlotAPI();
+//                } else {
+                //  showOrHideCustomerDetailsLayout(true);
+                //}
             }
 
             @Override
@@ -113,7 +111,26 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
             }
         });
 
-        if (intent.hasExtra("CommingFromTestDriveOption")) {
+        GenericSpinnerAdapter genericSpinnerAdapterForVehicleType = new GenericSpinnerAdapter(this, -1, applicationClass.getTypesOfVehicle(), TYPE_OF_VEHICLE);
+        spinnerTypeOfVehicle.setAdapter(genericSpinnerAdapterForVehicleType);
+        spinnerTypeOfVehicle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                typeOfVehicleSelected = ((String) ((GenericSpinnerAdapter) (parent.getAdapter())).getItemList().get(position));
+                if (typeOfVehicleSelected.equalsIgnoreCase("Company Vehicle")) {
+                    showOrHideEnterVehicleNumberLayout(true);
+                } else {
+                    showOrHideEnterVehicleNumberLayout(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                typeOfVehicleSelected = ((String) ((GenericSpinnerAdapter) (parent.getAdapter())).getItemList().get(0));
+            }
+        });
+
+       /* if (intent.hasExtra("CommingFromTestDriveOption")) {
             llTypeOfRide.setVisibility(View.GONE);
             callGetSlotAPI();
             showOrHideCustomerDetailsLayout(true);
@@ -125,11 +142,34 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                 etCustomername.setText(upsertRideRequestObj.getCustomerName());
                 // rideID = upsertRideRequestObj.getId();
             }
-        }
+        }*/
     }
 
 
-    private UpsertTestDriveRequestObj getUpsertTestDriveRequestObj() {
+    private UpsertCustomerDetailsRequestObj getUpsertCustomerDetailsRequestObj() {
+        UpsertCustomerDetailsRequestObj upsertCustomerDetailsRequestObj = new UpsertCustomerDetailsRequestObj();
+        upsertCustomerDetailsRequestObj.setUid(PreferenceManager.readString(PREF_INDIVISUAL_ID));
+        upsertCustomerDetailsRequestObj.setAdminUid(PreferenceManager.readString(PREF_ADMIN_UID));
+        upsertCustomerDetailsRequestObj.setEnquiryNumber(etEnquirynumber.getText().toString());
+        upsertCustomerDetailsRequestObj.setName(etCustomername.getText().toString());
+        upsertCustomerDetailsRequestObj.setMobileNumber(etCustomerMobileNumber.getText().toString());
+        upsertCustomerDetailsRequestObj.setEmailID(etCustomerEmailId.getText().toString());
+        return upsertCustomerDetailsRequestObj;
+    }
+
+
+    private void callUpsertCustomerDetailsApi() {
+        RetrofitParamsDTO retrofitParamsDTO = new RetrofitParamsDTO.RetrofitBuilder(this,
+                APIConstants.baseurl, getUpsertCustomerDetailsRequestObj(), UpsertCustomerDetailsResponseObj.class,
+                APIConstants.RetrofitMethodConstants.UPSERT_CUSTOMER_API, UPSERT_CUSTOMER_API_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
+                .setProgressDialog(new AppProgressDialog(this))
+                .setShowDialog(true)
+                .build();
+        retrofitParamsDTO.execute(retrofitParamsDTO);
+    }
+
+
+   /* private UpsertTestDriveRequestObj getUpsertTestDriveRequestObj() {
         UpsertTestDriveRequestObj upsertTestDriveRequestObj = new UpsertTestDriveRequestObj();
         upsertTestDriveRequestObj.setCarId(upsertRideRequestObj.getCarId());
         upsertTestDriveRequestObj.setAdmin_uid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
@@ -150,16 +190,20 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                 .setShowDialog(true)
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
-    }
+    }*/
 
     private UpsertRideRequestObj getUpsertRideRequestObj() {
         UpsertRideRequestObj upsertRideRequestObj = new UpsertRideRequestObj();
+        upsertRideRequestObj.setEnquiryNumber(etEnquirynumber.getText().toString());
+        upsertRideRequestObj.setName(etCustomername.getText().toString());
+        upsertRideRequestObj.setMobileNumber(etCustomerMobileNumber.getText().toString());
+        upsertRideRequestObj.setEmailID(etCustomerEmailId.getText().toString());
         upsertRideRequestObj.setAdminUid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
         upsertRideRequestObj.setRideType(typeOfRideSelected);
         upsertRideRequestObj.setUid(PreferenceManager.readString(PreferenceManager.PREF_INDIVISUAL_ID));
-        upsertRideRequestObj.setCustomerEnquiryNo(etEnquirynumber.getText().toString());
-        upsertRideRequestObj.setCustomerName(etCustomername.getText().toString());
-        upsertRideRequestObj.setCustomerMobile(etCustomerMobileNumber.getText().toString());
+        upsertRideRequestObj.setCustomer_id(customerID);
+        upsertRideRequestObj.setVehicle_type(typeOfVehicleSelected);
+        upsertRideRequestObj.setVehicle_number(etVehiclenumber.getText().append("").toString());//etVehiclenumber
         upsertRideRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
         return upsertRideRequestObj;
     }
@@ -174,7 +218,7 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
 
-    private SendOtpRequestObj getSendOtpRequestObj() {
+ /*   private SendOtpRequestObj getSendOtpRequestObj() {
         SendOtpRequestObj sendOtpRequestObj = new SendOtpRequestObj();
         sendOtpRequestObj.setCustomerMonileNumber("91" + etCustomerMobileNumber.getText().toString());
         sendOtpRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_TESTDRIVE_ID));
@@ -190,21 +234,19 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
+*/
 
-
-
-
-    private void showOrHideCustomerDetailsLayout(boolean isWantToShow) {
+    private void showOrHideEnterVehicleNumberLayout(boolean isWantToShow) {
         if (isWantToShow) {
-            tvSomethingwrong.setVisibility(View.GONE);
-            llCustomerDetails.setVisibility(View.VISIBLE);
+            // tvSomethingwrong.setVisibility(View.GONE);
+            llTypeOfVehicle.setVisibility(View.VISIBLE);
         } else {
-            tvSomethingwrong.setVisibility(View.VISIBLE);
-            llCustomerDetails.setVisibility(View.GONE);
+            // tvSomethingwrong.setVisibility(View.VISIBLE);
+            llTypeOfVehicle.setVisibility(View.GONE);
         }
     }
 
-    private GetSlotsRequestObj getSlotsRequestObj() {
+    /*private GetSlotsRequestObj getSlotsRequestObj() {
         GetSlotsRequestObj getSlotsRequestObj = new GetSlotsRequestObj();
         getSlotsRequestObj.setAdmin_uid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
         getSlotsRequestObj.setUid(PreferenceManager.readString(PreferenceManager.PREF_INDIVISUAL_ID));
@@ -220,7 +262,7 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                 .setShowDialog(true)
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
-    }
+    }*/
 
 
     @OnClick({R.id.button_next})
@@ -229,7 +271,7 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
         switch (view.getId()) {
 
             case R.id.button_next:
-                boolean hasExtra = intent.hasExtra("CommingFromTestDriveOption");
+/*                boolean hasExtra = intent.hasExtra("CommingFromTestDriveOption");
                 //  boolean testDrive = typeOfRideSelected.equalsIgnoreCase("Test Drive");
                 if (hasExtra) {
                     if (validateUpsertRideRequestObject()) {
@@ -244,8 +286,10 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                         }
                         callUpsertTestDriveAPI();
                     }
-                } else if (validateUpsertRideRequestObject()) {
-                    callUpsertRideAPI();
+                } else*/
+                if (validateUpsertRideRequestObject()) {
+                    callUpsertCustomerDetailsApi();
+                    //callUpsertRideAPI();
                 }
 
                 break;
@@ -276,8 +320,26 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                         }
                     }
                     break;
+                case UPSERT_CUSTOMER_API_SERVICE_ID:
+                    UpsertCustomerDetailsResponseObj upsertCustomerDetailsResponseObj = (UpsertCustomerDetailsResponseObj) object;
+                    if (upsertCustomerDetailsResponseObj != null && upsertCustomerDetailsResponseObj.getStatus() != null) {
+                        if (upsertCustomerDetailsResponseObj.getStatus().getStatusCode() == SUCCESS) {
+                            customerID = upsertCustomerDetailsResponseObj.getCustomerId();
+                            callUpsertRideAPI();
+                            /*Customer customer = new Customer();
+                            customer.setName(etCustomername.getText().toString());
+                            customer.setAdminUid(PreferenceManager.readString(PREF_ADMIN_UID));
+                            customer.setEmailID(etCustomerEmailId.getText().toString());
+                            customer.setEnquiryNumber(etEnquirynumber.getText().toString());
+                            customer.setMobileNumber(etCustomerMobileNumber.getText().toString());
+                            customer.setCustomer_id(upsertCustomerDetailsResponseObj.getCustomer_id());*/
+                            showLongToast("Details saved successfully");
+                        }
+                    }
+                    break;
 
-                case GET_SLOTS_SERVICE_ID:
+
+                /*case GET_SLOTS_SERVICE_ID:
 
                     GetSlotsResponseObj getSlotsResponseObj = (GetSlotsResponseObj) object;
                     if (getSlotsResponseObj != null && getSlotsResponseObj.getStatus() != null) {
@@ -326,7 +388,7 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                             /*UpsertRideRequestObj upsertRideRequestObj = getUpsertRideRequestObj();
                             upsertRideRequestObj.setId(upsertRideResponseObj.getId());
                             String upsertRideCustomerInfo = PreferenceManager.getObjectToString(upsertRideRequestObj);
-                            PreferenceManager.writeString(PREF_RIDECUSTOMER_IFO, upsertRideCustomerInfo);*/
+                            PreferenceManager.writeString(PREF_RIDECUSTOMER_IFO, upsertRideCustomerInfo); //
                             PreferenceManager.writeString(PREF_TESTDRIVE_ID, upsertTestDriveResponseObj.getId());
                             callSendOTP_API();
                         } else if (upsertTestDriveResponseObj.getStatus().getStatusCode() == FAILURE) {
@@ -344,7 +406,7 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                             callActivity(EnterOtpActivity.class);
                         }
                     }
-                    break;
+                    break;*/
             }
         }
 
@@ -374,6 +436,11 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
             return false;
         }
 
+        if (isEmpty(etCustomerEmailId.getText().toString())) {
+            etCustomerEmailId.setError("Please enter Customer Email ID");
+            showLongSnackBar("Please enter Customer Customer Email ID");
+            return false;
+        }
 
         return true;
     }

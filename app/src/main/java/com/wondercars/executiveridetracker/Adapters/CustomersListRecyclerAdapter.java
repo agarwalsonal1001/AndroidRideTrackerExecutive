@@ -43,7 +43,7 @@ public class CustomersListRecyclerAdapter extends RecyclerView.Adapter<Customers
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.childview_viewallrides_adapter, parent, false);
+                .inflate(R.layout.childview_viewcustomers_adapter, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -55,6 +55,13 @@ public class CustomersListRecyclerAdapter extends RecyclerView.Adapter<Customers
                 holder.tvCustomername.setText(customerArrayList.get(position).getName());
                 holder.tvCustomerNumber.setText(customerArrayList.get(position).getMobileNumber());
                 holder.tvEmailId.setText(customerArrayList.get(position).getEmailID());
+                holder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(onItemClickListener!=null)
+                        onItemClickListener.onItemClick(v, position, customerArrayList.get(position));
+                    }
+                });
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,7 +91,7 @@ public class CustomersListRecyclerAdapter extends RecyclerView.Adapter<Customers
         }
     }
 
-    public ArrayList<Customer> getCustomerArrayList(){
+    public ArrayList<Customer> getCustomerArrayList() {
         return customerArrayList;
     }
 }

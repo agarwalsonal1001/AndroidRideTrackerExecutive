@@ -74,7 +74,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void showSnackBar(String message, View.OnClickListener listener) {
-        if (message != null) {
+        if (!TextUtils.isEmpty(message)) {
             final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE);
             snackBar.setAction("Dismiss", listener)
                     .setActionTextColor(Color.RED);
@@ -88,7 +88,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void showLongSnackBar(String message) {
-        if (message != null) {
+        if (!TextUtils.isEmpty(message)) {
             final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
             snackBar.setAction("Dismiss", new View.OnClickListener() {
                 @Override
@@ -107,7 +107,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void showSnackBar(String message) {
-        if (message != null) {
+        if (!TextUtils.isEmpty(message)) {
             final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE);
             snackBar.setAction("Dismiss", new View.OnClickListener() {
                 @Override
@@ -127,11 +127,12 @@ public class BaseActivity extends AppCompatActivity {
 
 
     public void showShortToast(String s) {
-        if (s != null)
+        if (!TextUtils.isEmpty(s))
             Toast.makeText(this.mContext, s, Toast.LENGTH_SHORT).show();
     }
 
     public void showLongToast(String s) {
+        if(!TextUtils.isEmpty(s))
         Toast.makeText(this.mContext, s, Toast.LENGTH_LONG).show();
     }
 

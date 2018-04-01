@@ -81,6 +81,12 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="text_style_black_normal_22dp">
+        <item name="android:textColor">@color/blackColor</item>
+        <item name="android:textSize">@dimen/text_size_22dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <style name="text_style_white_normal_20dp">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/text_size_20dp</item>

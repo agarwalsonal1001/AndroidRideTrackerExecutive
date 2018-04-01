@@ -79,12 +79,12 @@ public class ManageSlotsActivity extends BaseActivity {
 
         UpsertSlotsRequestObj upsertSlotsRequestObj = new UpsertSlotsRequestObj();
         try {
-            upsertSlotsRequestObj.setAdminUid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
+            upsertSlotsRequestObj.setAdmin_uid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
             upsertSlotsRequestObj.setBookingDate(DateUtils.formatStringDateFromOneToAnother(object.getBookingDate(), DateUtils.MMM_DD_COMMA_YYYY_DATE_FORMAT, DateUtils.DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT));
             upsertSlotsRequestObj.setCarId(object.getCarId());
             upsertSlotsRequestObj.setFromTime(DateUtils.formatStringDateFromOneToAnother(object.getFromTime(), DateUtils.MMM_DD_YYYY_hh_mm_ss_a_DATE_FORMAT, DateUtils.DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT));
             upsertSlotsRequestObj.setToTime(DateUtils.formatStringDateFromOneToAnother(object.getToTime(), DateUtils.MMM_DD_YYYY_hh_mm_ss_a_DATE_FORMAT, DateUtils.DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT));
-            upsertSlotsRequestObj.setActiveFlg("N");
+            upsertSlotsRequestObj.setActiveFlag("N");
             upsertSlotsRequestObj.setId(object.getId());
             upsertSlotsRequestObj.setUid(PreferenceManager.readString(PreferenceManager.PREF_INDIVISUAL_ID));
         } catch (Exception e) {
