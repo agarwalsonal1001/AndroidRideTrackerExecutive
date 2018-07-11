@@ -17,14 +17,14 @@ public class UpsertSlotsRequestObj implements Serializable {
     private String toTime;
     private String bookingDate;
     private String admin_uid;
-    private String activeFlag;
+    private String activeFlg;
 
     public String getActiveFlag() {
-        return activeFlag;
+        return activeFlg;
     }
 
     public void setActiveFlag(String activeFlag) {
-        this.activeFlag = activeFlag;
+        this.activeFlg = activeFlag;
     }
 
     private List<String> customerIDs = new ArrayList<String>();

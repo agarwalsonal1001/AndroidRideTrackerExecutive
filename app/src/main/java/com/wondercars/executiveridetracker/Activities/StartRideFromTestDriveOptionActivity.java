@@ -49,6 +49,7 @@ import com.wondercars.executiveridetracker.CustomClasses.AppProgressDialog;
 import com.wondercars.executiveridetracker.Manager.PreferenceManager;
 import com.wondercars.executiveridetracker.Modules.DirectionFinder;
 import com.wondercars.executiveridetracker.Modules.DirectionFinderListener;
+import com.wondercars.executiveridetracker.Modules.Duration;
 import com.wondercars.executiveridetracker.Modules.Route;
 import com.wondercars.executiveridetracker.R;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.OtpDTOs.SendOtpRequestObj;
@@ -72,9 +73,11 @@ import umer.accl.retrofit.RetrofitParamsDTO;
 import umer.accl.utils.Constants;
 import umer.accl.utils.MyAppsLog;
 
+import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_RIDE_BEFORE_TESTDRIVE_IS_GOING_ON;
 import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_TESTDRIVE_ID;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.FAILURE;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ToastMessages.SOMETHING_WENT_WRONG;
 
 public class StartRideFromTestDriveOptionActivity extends BaseActivity implements OnMapReadyCallback, DirectionFinderListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -86,6 +89,10 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
     TextView searchTextView;
     @BindView(R.id.button_startRide)
     Button buttonStartRide;
+
+    @BindView(R.id.tv_booking_id)
+    TextView tv_booking_id;
+
     private GoogleMap mMap;
     private static final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 12345;
 
@@ -101,12 +108,18 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
     private Location mLastLocation, startLocation;
     private Marker mCurrLocationMarker;
     UpsertRideRequestObj upsertRideRequestObj;
+    UpsertTestDriveRequestObj upsertTestDriveRequestObj;
+    private Duration mDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_ride);
         ButterKnife.bind(this);
+        upsertTestDriveRequestObj = new UpsertTestDriveRequestObj();
+       if(PreferenceManager.readInteger(PreferenceManager.PREF_ON_GOING_RIDE_TYPE)==PREF_RIDE_BEFORE_TESTDRIVE_IS_GOING_ON){
+           init();
+       }
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -114,6 +127,11 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
         mapFragment.getMapAsync(this);
 
 
+    }
+
+    private void init(){
+        buttonStartRide.setTag("stopride");
+        buttonStartRide.setText("Stop Ride");
     }
 
     @Override
@@ -222,24 +240,30 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
     }
 
     private UpsertTestDriveRequestObj getUpsertTestDriveRequestObj() {
-        UpsertTestDriveRequestObj upsertTestDriveRequestObj = new UpsertTestDriveRequestObj();
+        //UpsertTestDriveRequestObj upsertTestDriveRequestObj = new UpsertTestDriveRequestObj();
         upsertTestDriveRequestObj.setCarId(upsertRideRequestObj.getCarId());
+        upsertTestDriveRequestObj.setId(upsertRideRequestObj.getId());
+        upsertTestDriveRequestObj.setCustomer_id(upsertRideRequestObj.getCustomer_id());
         upsertTestDriveRequestObj.setAdmin_uid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
         upsertTestDriveRequestObj.setRide_type("Test Drive");
         upsertTestDriveRequestObj.setUid(PreferenceManager.readString(PreferenceManager.PREF_INDIVISUAL_ID));
         upsertTestDriveRequestObj.setCustomer_enquiry_no(upsertRideRequestObj.getEnquiryNumber());
         upsertTestDriveRequestObj.setCustomer_name(upsertRideRequestObj.getName());
         upsertTestDriveRequestObj.setCustomer_mobile(upsertRideRequestObj.getMobileNumber());
+        upsertTestDriveRequestObj.setOngoing_test_drive_flg("Y");
+
+
         return upsertTestDriveRequestObj;
 
     }
 
-    private void callUpsertTestDriveAPI() {
+    private void callUpsertTestDriveAPI(int serviceID) {
         RetrofitParamsDTO retrofitParamsDTO = new RetrofitParamsDTO.RetrofitBuilder(this,
                 APIConstants.baseurl, getUpsertTestDriveRequestObj(), UpsertTestDriveResponseObj.class,
-                APIConstants.RetrofitMethodConstants.UPSERT_TEST_DRIVE, UPSERT_TEST_DRIVE_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
+                APIConstants.RetrofitMethodConstants.UPSERT_TEST_DRIVE, serviceID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -248,6 +272,7 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
         SendOtpRequestObj sendOtpRequestObj = new SendOtpRequestObj();
         sendOtpRequestObj.setCustomerMonileNumber("91" + upsertRideRequestObj.getMobileNumber());
         sendOtpRequestObj.setCustomer_email(upsertRideRequestObj.getEmailID());
+        sendOtpRequestObj.setIsTestDrive("Y");
         sendOtpRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_TESTDRIVE_ID));
         return sendOtpRequestObj;
     }
@@ -258,6 +283,7 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
                 APIConstants.RetrofitMethodConstants.SEND_OTP_TO_CUSTOMER, SEND_OTP_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -281,24 +307,37 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
                 break;
 
             case R.id.button_startRide:
-                if (view.getTag().toString().equalsIgnoreCase("startride")) {
-                    if (validateRequestObject()) {
-                        upsertRideRequestObj = (UpsertRideRequestObj) PreferenceManager.getStringToObject(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO), UpsertRideRequestObj.class);
-                        upsertRideRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
-                        String startLatLng[] = startAndEndLocation.get(0).split(",");
-                        if (startLatLng.length > 1) {
-                            upsertRideRequestObj.setStartLat(startLatLng[0]);
-                            upsertRideRequestObj.setStartLong(startLatLng[1]);
+                try {
+                    if (view.getTag().toString().equalsIgnoreCase("startride")) {
+                        if (validateRequestObject()) {
+                            PreferenceManager.writeInteger(PreferenceManager.PREF_ON_GOING_RIDE_TYPE, PREF_RIDE_BEFORE_TESTDRIVE_IS_GOING_ON);
+                            upsertRideRequestObj = (UpsertRideRequestObj) PreferenceManager.getStringToObject(PreferenceManager.readString(PreferenceManager.PREF_RIDECUSTOMER_IFO), UpsertRideRequestObj.class);
+                            getUpsertTestDriveRequestObj();
+                            upsertTestDriveRequestObj.setId(upsertRideRequestObj.getId());
+                          //  upsertRideRequestObj.setRideType("Customer Visit");
+                            String startLatLng[] = startAndEndLocation.get(0).split(",");
+                            if (startLatLng.length > 1) {
+                                upsertTestDriveRequestObj.setStart_lat(startLatLng[0]);
+                                upsertTestDriveRequestObj.setStart_long(startLatLng[1]);
+                            }
+                            if (mDuration != null) {
+                                upsertTestDriveRequestObj.setExpected_duration_of_travel(String.valueOf(mDuration.value));
+                            }
+                            callUpsertTestDriveAPI(START_RIDE_SERVICE_ID);
+                           // callUpsertRideAPI(upsertRideRequestObj, START_RIDE_SERVICE_ID);
                         }
-                        callUpsertRideAPI(upsertRideRequestObj, START_RIDE_SERVICE_ID);
+                    } else {
+                        String endLatLng[] = startAndEndLocation.get(1).split(",");
+                        if (endLatLng != null && endLatLng.length > 1) {
+                            upsertTestDriveRequestObj.setEnd_lat(endLatLng[0]);
+                            upsertTestDriveRequestObj.setEnd_long(endLatLng[1]);
+                        }
+                        //upsertRideRequestObj.setRide_completed_flg("Y");
+                        callUpsertTestDriveAPI(END_RIDE_SERVICE_ID);
+                      //  callUpsertRideAPI(upsertRideRequestObj, END_RIDE_SERVICE_ID);
                     }
-                } else {
-                    String endLatLng[] = startAndEndLocation.get(1).split(",");
-                    if (endLatLng != null && endLatLng.length > 1) {
-                        upsertRideRequestObj.setEndLat(endLatLng[0]);
-                        upsertRideRequestObj.setEndLong(endLatLng[1]);
-                    }
-                    callUpsertRideAPI(upsertRideRequestObj, END_RIDE_SERVICE_ID);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
                 break;
@@ -311,6 +350,7 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
                 APIConstants.RetrofitMethodConstants.UPSERT_RIDE_API, serviceid, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -322,30 +362,33 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
             switch (serviceId) {
 
                 case START_RIDE_SERVICE_ID:
-                    UpsertRideResponseObj upsertRideResponseObj = (UpsertRideResponseObj) object;
+                    UpsertTestDriveResponseObj upsertRideResponseObj = (UpsertTestDriveResponseObj) object;
                     if (upsertRideResponseObj != null && upsertRideResponseObj.getStatus() != null) {
                         if (upsertRideResponseObj.getStatus().getStatusCode() == SUCCESS) {
+                            String bookingID = PreferenceManager.readString(PreferenceManager.PREF_TESTDRIVE_ID);
+                            tv_booking_id.setText("Booking ID  "+bookingID.substring(bookingID.length()-7,bookingID.length()-1));
                             buttonStartRide.setTag("stopride");
                             buttonStartRide.setText("Stop Ride");
-                            upsertRideRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
+                           // upsertRideRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
                             startService(new Intent(getApplicationContext(), MyService.class));
                         } else if (upsertRideResponseObj.getStatus().getStatusCode() == FAILURE) {
-                            showSnackBar(upsertRideResponseObj.getStatus().getErrorDescription());
+                            showLongSnackBar(upsertRideResponseObj.getStatus().getErrorDescription());
                         }
                     }
                     break;
                 case END_RIDE_SERVICE_ID:
-                    UpsertRideResponseObj upsertRideResponse = (UpsertRideResponseObj) object;
+                    UpsertTestDriveResponseObj upsertRideResponse = (UpsertTestDriveResponseObj) object;
                     stopService(new Intent(getApplicationContext(), MyService.class));
                     if (upsertRideResponse != null && upsertRideResponse.getStatus() != null) {
                         if (upsertRideResponse.getStatus().getStatusCode() == SUCCESS) {
-                            showSnackBar("Ride stoped successfully");
+                            showLongSnackBar("Ride stoped successfully");
+                            PreferenceManager.writeInteger(PreferenceManager.PREF_ON_GOING_RIDE_TYPE,-1);
                             PreferenceManager.writeString(PreferenceManager.PREF_RIDE_ID, "");
-                            callUpsertTestDriveAPI();
+                            callUpsertTestDriveAPI(UPSERT_TEST_DRIVE_SERVICE_ID);
                             /*callActivity(NavigationActivity.class);
                             finish();*/
                         } else if (upsertRideResponse.getStatus().getStatusCode() == FAILURE) {
-                            showSnackBar(upsertRideResponse.getStatus().getErrorDescription());
+                            showLongSnackBar(upsertRideResponse.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -359,10 +402,10 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
                             upsertRideRequestObj.setId(upsertRideResponseObj.getId());
                             String upsertRideCustomerInfo = PreferenceManager.getObjectToString(upsertRideRequestObj);
                             PreferenceManager.writeString(PREF_RIDECUSTOMER_IFO, upsertRideCustomerInfo);*/
-                            PreferenceManager.writeString(PREF_TESTDRIVE_ID, upsertTestDriveResponseObj.getId());
+                           // PreferenceManager.writeString(PREF_TESTDRIVE_ID, upsertTestDriveResponseObj.getId());
                             callSendOTP_API();
                         } else if (upsertTestDriveResponseObj.getStatus().getStatusCode() == FAILURE) {
-                            showSnackBar(upsertTestDriveResponseObj.getStatus().getErrorDescription());
+                            showLongSnackBar(upsertTestDriveResponseObj.getStatus().getErrorDescription());
                         }
                     }
 
@@ -382,7 +425,7 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
 
         @Override
         public void onError(int serviceId) {
-
+            showLongSnackBar(SOMETHING_WENT_WRONG);
         }
     };
 
@@ -390,7 +433,7 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
         if (startAndEndLocation != null && startAndEndLocation.size() == 2) {
             return true;
         } else {
-            showSnackBar("Please select destination to Start a ride");
+            showLongSnackBar("Please select destination to Start a ride");
         }
 
         return false;
@@ -462,7 +505,13 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
 
+        Duration duration = null;
         for (Route route : routes) {
+            if(duration==null) {
+                duration = route.duration;
+                mDuration =null;
+                mDuration = duration;
+            }
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
 //            ((TextView) findViewById(R.id.tvDuration)).setText(route.duration.text);
 //            ((TextView) findViewById(R.id.tvDistance)).setText(route.distance.text);
@@ -552,7 +601,7 @@ public class StartRideFromTestDriveOptionActivity extends BaseActivity implement
         endPoint.setLatitude(17.375775);
         endPoint.setLongitude(78.469218);*/
 
-        showSnackBar(startPoint.distanceTo(endPoint) / 1000 + "");
+        showLongSnackBar(startPoint.distanceTo(endPoint) / 1000 + "");
         return startPoint.distanceTo(endPoint) / 1000;
     }
 

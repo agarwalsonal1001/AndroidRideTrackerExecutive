@@ -17,7 +17,24 @@ public class UpsertRideRequestObj {
     private String id;
     private String vehicle_type;
     private String vehicle_number;
+    private String expected_duration_of_travel;
 
+    private String ride_completed_flg;
+
+    public String getRide_completed_flg() {
+        return ride_completed_flg;
+    }
+
+    public void setRide_completed_flg(String ride_completed_flg) {
+        this.ride_completed_flg = ride_completed_flg;
+    }
+    public String getExpected_duration_of_travel() {
+        return expected_duration_of_travel;
+    }
+
+    public void setExpected_duration_of_travel(String expected_duration_of_travel) {
+        this.expected_duration_of_travel = expected_duration_of_travel;
+    }
 
     //Not to send in APIs
     private String name;
@@ -152,4 +169,7 @@ public class UpsertRideRequestObj {
     public void setId(String id) {
         this.id = id;
     }
+
+
+
 }

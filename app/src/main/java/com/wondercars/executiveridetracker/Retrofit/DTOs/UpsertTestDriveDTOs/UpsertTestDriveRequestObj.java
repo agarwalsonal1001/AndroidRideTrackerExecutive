@@ -17,6 +17,79 @@ public class UpsertTestDriveRequestObj {
     String time_travelled;
     String id;
     String ride_type;
+    String expected_duration_of_travel;
+    String ongoing_test_drive_flg;
+    String customer_id;
+    private String ride_completed_flg;
+    private String ride_start_lat;
+    private String ride_start_long;
+    private String ride_end_lat;
+    private String ride_end_long;
+
+
+    public String getStart_lat() {
+        return ride_start_lat;
+    }
+
+    public void setStart_lat(String ride_start_lat) {
+        this.ride_start_lat = ride_start_lat;
+    }
+
+    public String getStart_long() {
+        return ride_start_long;
+    }
+
+    public void setStart_long(String ride_start_long) {
+        this.ride_start_long = ride_start_long;
+    }
+
+    public String getEnd_lat() {
+        return ride_end_lat;
+    }
+
+    public void setEnd_lat(String ride_end_lat) {
+        this.ride_end_lat = ride_end_lat;
+    }
+
+    public String getEnd_long() {
+        return ride_end_long;
+    }
+
+    public void setEnd_long(String ride_end_long) {
+        this.ride_end_long = ride_end_long;
+    }
+
+    public String getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(String customer_id) {
+        this.customer_id = customer_id;
+    }
+
+    public String getOngoing_test_drive_flg() {
+        return ongoing_test_drive_flg;
+    }
+
+    public void setOngoing_test_drive_flg(String ongoing_test_drive_flg) {
+        this.ongoing_test_drive_flg = ongoing_test_drive_flg;
+    }
+
+    public String getRide_completed_flg() {
+        return ride_completed_flg;
+    }
+
+    public void setRide_completed_flg(String ride_completed_flg) {
+        this.ride_completed_flg = ride_completed_flg;
+    }
+
+    public String getExpected_duration_of_travel() {
+        return expected_duration_of_travel;
+    }
+
+    public void setExpected_duration_of_travel(String expected_duration_of_travel) {
+        this.expected_duration_of_travel = expected_duration_of_travel;
+    }
 
     public String getRide_type() {
         return ride_type;

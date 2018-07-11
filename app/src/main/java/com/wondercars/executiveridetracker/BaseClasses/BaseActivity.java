@@ -16,10 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wondercars.executiveridetracker.Application.ExecutiveRideTrackerApplicationClass;
+import com.wondercars.executiveridetracker.Manager.PreferenceManager;
 import com.wondercars.executiveridetracker.R;
 import com.wondercars.executiveridetracker.Utils.AppConstants;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import umer.accl.retrofit.RetrofitHeaders;
 
 /**
  * Created by ubuntu-dev001 on 28/12/16.
@@ -28,6 +33,7 @@ public class BaseActivity extends AppCompatActivity {
     private Context mContext;
     private Activity mActivity;
     protected ExecutiveRideTrackerApplicationClass applicationClass;
+    public static ArrayList<RetrofitHeaders> retrofitHeadersArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,14 +88,14 @@ public class BaseActivity extends AppCompatActivity {
             sbView.setBackgroundColor(Color.parseColor(AppConstants.ColorStrings.lightestBlue));
             TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(Color.parseColor(AppConstants.ColorStrings.colorPrimaryDark));
-           // textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP ,getResources().getDimension(R.dimen.text_size_18dp));
+            // textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP ,getResources().getDimension(R.dimen.text_size_18dp));
             snackBar.show();
         }
     }
 
     public void showLongSnackBar(String message) {
         if (!TextUtils.isEmpty(message)) {
-            final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
+            final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT);
             snackBar.setAction("Dismiss", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -101,7 +107,7 @@ public class BaseActivity extends AppCompatActivity {
             sbView.setBackgroundColor(Color.parseColor(AppConstants.ColorStrings.lightestBlue));
             TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
             textView.setTextColor(Color.parseColor(AppConstants.ColorStrings.colorPrimaryDark));
-          //  textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP ,getResources().getDimension(R.dimen.text_size_18dp));
+            //  textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP ,getResources().getDimension(R.dimen.text_size_18dp));
             snackBar.show();
         }
     }
@@ -132,8 +138,8 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void showLongToast(String s) {
-        if(!TextUtils.isEmpty(s))
-        Toast.makeText(this.mContext, s, Toast.LENGTH_LONG).show();
+        if (!TextUtils.isEmpty(s))
+            Toast.makeText(this.mContext, s, Toast.LENGTH_LONG).show();
     }
 
     public void callActivity(Class<?> cls) {
@@ -162,5 +168,14 @@ public class BaseActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public List<RetrofitHeaders> getRetrofitHeaderses() {
+        if (retrofitHeadersArrayList == null) {
+            RetrofitHeaders retrofitHeaders = new RetrofitHeaders("uid", PreferenceManager.readString(PreferenceManager.PREF_INDIVISUAL_ID));
+            retrofitHeadersArrayList = new ArrayList<RetrofitHeaders>();
+            retrofitHeadersArrayList.add(retrofitHeaders);
+        }
+        return retrofitHeadersArrayList;
     }
 }

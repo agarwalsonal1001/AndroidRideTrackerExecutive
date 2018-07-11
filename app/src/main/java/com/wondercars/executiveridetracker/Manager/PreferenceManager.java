@@ -28,6 +28,10 @@ public class PreferenceManager {
     public static final String PREF_RIDECUSTOMER_IFO = "PREF_RIDECUSTOMER_IFO";
     public static final String PREF_RIDE_ID = "PREF_RIDE_ID";
     public static final String PREF_TESTDRIVE_ID = "PREF_TESTDRIVE_ID";
+    public static final String PREF_ON_GOING_RIDE_TYPE = "PREF_ON_GOING_RIDE_TYPE";
+    public static final String PREF_BOOKING_ID = "PREF_BOOKING_ID";
+    public static final int PREF_RIDE_BEFORE_TESTDRIVE_IS_GOING_ON = 1;
+    public static final int PREF_TESTDRIVE_IS_GOING_ON = 2;
     private static SharedPreferences pref;
 
     public static void setSharedPreferences() {

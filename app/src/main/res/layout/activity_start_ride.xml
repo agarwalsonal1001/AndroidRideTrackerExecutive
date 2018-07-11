@@ -5,9 +5,12 @@
     android:weightSum="1">
 
     <LinearLayout
+        android:id="@+id/ll_enterDestination"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="@dimen/activity_margin_10dp"
+        android:layout_marginLeft="@dimen/activity_margin_10dp"
+        android:layout_marginRight="@dimen/activity_margin_10dp"
+        android:layout_marginTop="@dimen/activity_margin_10dp"
         android:layout_weight="0.06"
         android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
         android:orientation="horizontal"
@@ -25,6 +28,7 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.94">
@@ -38,17 +42,37 @@
             android:layout_height="match_parent"
             tools:context="com.wondercars.executiveridetracker.Activities.MapsActivity" />
 
-        <Button
-            android:id="@+id/button_startRide"
-            android:tag="startride"
-            style="@style/text_style_white_normal_16dp"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="@dimen/activity_margin_10dp"
-            android:background="@drawable/blue_rectangle_with_circular_corners"
-            android:paddingLeft="@dimen/activity_margin_20dp"
-            android:paddingRight="@dimen/activity_margin_20dp"
-            android:text="Start Ride" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_booking_id"
+                style="@style/text_style_black_bold_18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/activity_margin_5dp"
+                android:textAllCaps="true" />
+
+            <Button
+                android:id="@+id/button_startRide"
+                style="@style/text_style_white_normal_16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="@dimen/activity_margin_10dp"
+                android:background="@drawable/blue_rectangle_with_circular_corners"
+                android:paddingLeft="@dimen/activity_margin_20dp"
+                android:paddingRight="@dimen/activity_margin_20dp"
+                android:tag="startride"
+                android:text="Start Ride" />
+
+
+        </LinearLayout>
+
     </FrameLayout>
 </LinearLayout>

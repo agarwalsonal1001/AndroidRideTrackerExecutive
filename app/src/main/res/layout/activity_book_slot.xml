@@ -94,6 +94,14 @@
             </LinearLayout>
 
 
+
+            <LinearLayout
+                android:id="@+id/ll_carAvailableOrNot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:orientation="vertical">
+
             <TextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
@@ -176,14 +184,36 @@
                         android:layout_marginTop="@dimen/activity_margin_10dp"
                         android:layout_weight="0.5"
                         android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <Spinner
+                        <TextView
+                            android:id="@+id/tv_fromTime"
+                            android:layout_width="match_parent"
+                            style="@style/text_style_black_normal_18dp"
+                            android:text="Select Time"
+                            android:layout_height="match_parent"
+                            android:gravity="center" />
+
+                       <!-- <EditText
+                            android:layout_width="0dp"
+                            android:layout_weight="0.45"
+                            android:layout_height="wrap_content" />-->
+                      <!--  <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text=":"
+                            android:gravity="center"
+                            android:layout_weight="0.1"/>-->
+                        <!--  <EditText
+                             android:layout_width="0dp"
+                             android:layout_weight="0.45"
+                             android:layout_height="wrap_content" />-->
+                       <!-- <Spinner
                             android:id="@+id/spinner_select_from_time"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
-                        </Spinner>
+                        </Spinner>-->
                     </LinearLayout>
                 </LinearLayout>
 
@@ -208,14 +238,33 @@
                         android:layout_marginTop="@dimen/activity_margin_10dp"
                         android:layout_weight="0.5"
                         android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <Spinner
+
+                        <TextView
+                            android:id="@+id/tv_toTime"
+                            android:layout_width="match_parent"
+                            style="@style/text_style_black_normal_18dp"
+                            android:layout_height="match_parent"
+                            android:text="Select Time"
+                            android:gravity="center" />
+
+
+                       <!-- <EditText
+                            android:layout_width="0dp"
+                            android:layout_weight="0.45"
+                            android:layout_height="wrap_content" />
+
+                        <EditText
+                            android:layout_width="0dp"
+                            android:layout_weight="0.45"
+                            android:layout_height="wrap_content" />-->
+                      <!--  <Spinner
                             android:id="@+id/spinner_select_to_time"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
-                        </Spinner>
+                        </Spinner>-->
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -247,7 +296,7 @@
                 android:paddingRight="@dimen/size_50dp"
                 android:text="Next"
                 android:textAllCaps="true" />
-
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

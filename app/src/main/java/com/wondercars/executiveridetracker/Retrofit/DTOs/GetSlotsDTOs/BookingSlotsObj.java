@@ -1,12 +1,15 @@
 package com.wondercars.executiveridetracker.Retrofit.DTOs.GetSlotsDTOs;
 
 import com.wondercars.executiveridetracker.Retrofit.DTOs.GetCarsDTOs.CarDetailObj;
+import com.wondercars.executiveridetracker.Retrofit.DTOs.GetExecutivesDTOs.ExecutivesDetailsObj;
+
+import java.io.Serializable;
 
 /**
  * Created by acer on 21/1/18.
  */
 
-public class BookingSlotsObj {
+public class BookingSlotsObj implements Serializable {
 
     String id;
     String carId;
@@ -19,6 +22,15 @@ public class BookingSlotsObj {
     boolean available = true;
     boolean selected = false;
     CarsDetailObj car;
+    ExecutivesDetailsObj rideTrackerUser;
+
+    public ExecutivesDetailsObj getRideTrackerUser() {
+        return rideTrackerUser;
+    }
+
+    public void setRideTrackerUser(ExecutivesDetailsObj rideTrackerUser) {
+        this.rideTrackerUser = rideTrackerUser;
+    }
 
     public String getId() {
         return id;

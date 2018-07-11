@@ -7,6 +7,15 @@ package com.wondercars.executiveridetracker.Retrofit.DTOs.ViewAllRidesDTOs;
 public class RidesDetails {
 
     private String id;
+    private String createDate;
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
 
     public String getId() { return this.id; }
 

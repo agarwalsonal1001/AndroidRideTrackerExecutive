@@ -45,7 +45,7 @@
         <activity android:name=".Activities.ManageSlotsActivity" />
         <activity android:name=".Activities.EnterOtpActivity" />
         <activity android:name=".Activities.ViewAllRidesActivity" />
-        <activity android:name=".Activities.StartRideFromTestDriveOptionActivity"></activity>
+        <activity android:name=".Activities.StartRideFromTestDriveOptionActivity" />
 
         <service
             android:name=".Services.MyService"
@@ -53,7 +53,20 @@
             android:exported="true" />
 
         <activity android:name=".Activities.CustomerListActivity" />
-        <activity android:name=".Activities.EnterCustomerDetailActivity"></activity>
+        <activity android:name=".Activities.EnterCustomerDetailActivity" />
+
+        <service
+            android:name=".Services.SetNotificationService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".BroadCastReceiver.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".Activities.ExecutiveProfileActivity" />
+        <activity android:name=".Activities.ImagePicker"></activity>
     </application>
 
 </manifest>

@@ -38,6 +38,7 @@ import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitCon
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.TYPES_OF_RIDES;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.TYPE_OF_VEHICLE;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ToastMessages.SOMETHING_WENT_WRONG;
 
 public class EnterCustomerDetailsActivityOld extends BaseActivity {
 
@@ -55,7 +56,7 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
     Button buttonNext;
     @BindView(R.id.ll_type_of_vehicle)
     LinearLayout llTypeOfVehicle;
-    String typeOfRideSelected = "", rideID = "",typeOfVehicleSelected="";
+    String typeOfRideSelected = "", rideID = "", typeOfVehicleSelected = "";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     UpsertRideRequestObj upsertRideRequestObj;
@@ -164,6 +165,7 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.UPSERT_CUSTOMER_API, UPSERT_CUSTOMER_API_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -214,6 +216,7 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.UPSERT_RIDE_API, UPSERT_RIDE_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -316,7 +319,7 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
                             callActivity(StartRideActivity.class);
                             finish();
                         } else if (upsertRideResponseObj.getStatus().getStatusCode() == FAILURE) {
-                            showSnackBar(upsertRideResponseObj.getStatus().getErrorDescription());
+                            showLongSnackBar(upsertRideResponseObj.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -412,9 +415,41 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
 
         @Override
         public void onError(int serviceId) {
-            showSnackBar("Something went wrong...");
+            showLongSnackBar(SOMETHING_WENT_WRONG);
         }
     };
+
+
+    public boolean isAlphanumeric(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (Character.isDigit(c))
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean isAlphaChar(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (Character.isLetter(c))
+                return true;
+        }
+
+        return false;
+    }
+
+
+    private boolean validateEmailAddress(String email) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+        if (email.matches(emailPattern)) {
+            return true;
+        }
+
+        return false;
+    }
 
     private boolean validateUpsertRideRequestObject() {
 
@@ -422,6 +457,12 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
             showLongSnackBar("Please enter Customer Enquiry Number");
             etEnquirynumber.setError("Please enter Customer Enquiry Number");
             return false;
+        } else {
+            if (!(isAlphanumeric(etEnquirynumber.getText().toString()) && isAlphaChar(etEnquirynumber.getText().toString()))) {
+                showLongSnackBar("Customer Enquiry Number should be alphanumeric");
+                etEnquirynumber.setError("Customer Enquiry Number should be alphanumeric");
+                return false;
+            }
         }
 
         if (isEmpty(etCustomername.getText().toString())) {
@@ -434,11 +475,19 @@ public class EnterCustomerDetailsActivityOld extends BaseActivity {
             etCustomerMobileNumber.setError("Please enter Customer Mobile Number");
             showLongSnackBar("Please enter Customer Mobile Number");
             return false;
+        } else if (etCustomerMobileNumber.getText().toString().length() < 10) {
+            etCustomerMobileNumber.setError("Please enter valid Customer Mobile Number");
+            showLongSnackBar("Please enter valid Customer Mobile Number");
+            return false;
         }
 
         if (isEmpty(etCustomerEmailId.getText().toString())) {
             etCustomerEmailId.setError("Please enter Customer Email ID");
             showLongSnackBar("Please enter Customer Customer Email ID");
+            return false;
+        } else if (!validateEmailAddress(etCustomerEmailId.getText().toString())) {
+            etCustomerEmailId.setError("Please enter correct Customer Email ID");
+            showLongSnackBar("Please enter correct Customer Customer Email ID");
             return false;
         }
 

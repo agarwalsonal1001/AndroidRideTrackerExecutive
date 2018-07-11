@@ -1,14 +1,22 @@
 package com.wondercars.executiveridetracker.Activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 
 import com.wondercars.executiveridetracker.Adapters.ViewAllRidesRecyclerAdapter;
+import com.wondercars.executiveridetracker.Adapters.ViewPagerAdapter;
 import com.wondercars.executiveridetracker.BaseClasses.BaseActivity;
 import com.wondercars.executiveridetracker.CustomClasses.AppProgressDialog;
+import com.wondercars.executiveridetracker.Fragments.RidesFragment;
+import com.wondercars.executiveridetracker.Fragments.TestDrivesFragment;
 import com.wondercars.executiveridetracker.Manager.PreferenceManager;
 import com.wondercars.executiveridetracker.R;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.ViewAllRidesDTOs.ViewAllRidesResponseObj;
@@ -22,78 +30,74 @@ import umer.accl.retrofit.RetrofitParamsDTO;
 import umer.accl.utils.Constants;
 
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ToastMessages.SOMETHING_WENT_WRONG;
 
 public class ViewAllRidesActivity extends BaseActivity {
 
-
-    private static final int VIEW_ALLRIDES_SERVICE_ID = 1;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
+    @BindView(R.id.tabs)
+    TabLayout tabs;
+    @BindView(R.id.appbar)
+    AppBarLayout appbar;
+    @BindView(R.id.container)
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all_rides);
         ButterKnife.bind(this);
-        init();
-    }
-
-    private void init() {
-        callViewAllRidesAPI();
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        setActionBar(toolbar, "All Rides");
-
-    }
-
-    private ViewRidesRequestObj getViewRidesRequestObj() {
-        ViewRidesRequestObj viewRidesRequestObj = new ViewRidesRequestObj();
-        viewRidesRequestObj.setUid(PreferenceManager.readString(PreferenceManager.PREF_INDIVISUAL_ID));
-        viewRidesRequestObj.setAdminUid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
-        return viewRidesRequestObj;
-
-    }
-
-    private void callViewAllRidesAPI() {
-        RetrofitParamsDTO retrofitParamsDTO = new RetrofitParamsDTO.RetrofitBuilder(this,
-                APIConstants.baseurl, getViewRidesRequestObj(), ViewAllRidesResponseObj.class,
-                APIConstants.RetrofitMethodConstants.VIEW_ALL_RIDES, VIEW_ALLRIDES_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
-                .setProgressDialog(new AppProgressDialog(this))
-                .setShowDialog(true)
-                .build();
-        retrofitParamsDTO.execute(retrofitParamsDTO);
+        initActionBar();
+        setupTabLayout();
+        setupViewPager(mViewPager);
     }
 
 
-    RetrofitInterface retrofitInterface = new RetrofitInterface() {
-        @Override
-        public void onSuccess(Object object, int serviceId) {
+    private void setupViewPager(ViewPager mViewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(RidesFragment.newInstance(), "All Rides");
+        adapter.addFragment(TestDrivesFragment.newInstance(), "Test Drives");
+        mViewPager.setAdapter(adapter);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-            ViewAllRidesResponseObj viewAllRidesResponseObj = (ViewAllRidesResponseObj) object;
-            if (viewAllRidesResponseObj != null && viewAllRidesResponseObj.getStatus() != null) {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                if (viewAllRidesResponseObj.getStatus().getStatusCode() == SUCCESS) {
-                    if (viewAllRidesResponseObj.getRides().size() > 0) {
-
-                        ViewAllRidesRecyclerAdapter viewAllRidesRecyclerAdapter = new ViewAllRidesRecyclerAdapter(ViewAllRidesActivity.this, viewAllRidesResponseObj.getRides(), null);
-                        recyclerView.setAdapter(viewAllRidesRecyclerAdapter);
-                    }
-                } else {
-                    showSnackBar(viewAllRidesResponseObj.getStatus().getErrorDescription());
-                }
             }
 
-        }
+            @Override
+            public void onPageSelected(int position) {
 
-        @Override
-        public void onError(int serviceId) {
 
-        }
-    };
+            }
 
+            @Override
+            public void onPageScrollStateChanged(int state) {
+             /*   if (state == 0) {
+                    try {
+                        OtherSelectMedicineFragment.selectMedicineAdapterOther.clearData();
+                    } catch (Exception e) {
+
+                    }
+
+                }*/
+
+            }
+        });
+    }
+
+    private void setupTabLayout() {
+        tabs.setupWithViewPager(mViewPager);
+    }
+
+    private void initActionBar() {
+        toolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>View Rides </font>"));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
 }
 
 

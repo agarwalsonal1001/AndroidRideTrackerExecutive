@@ -32,6 +32,7 @@ import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitCon
 import static com.wondercars.executiveridetracker.Utils.AppConstants.LOGIN_SUCCESSFULLY;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.PLEASE_ENTER_EMAIL;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.PLEASE_ENTER_PASSWORD;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ToastMessages.SOMETHING_WENT_WRONG;
 
 
 public class LoginActivity extends BaseActivity {
@@ -85,11 +86,11 @@ public class LoginActivity extends BaseActivity {
                                     PreferenceManager.writeBoolean(PREF_LOGIN_CURRENT_TAG, true);
                                     PreferenceManager.writeString(PREF_INDIVISUAL_ID, loginResponseObj.getUid());
                                     PreferenceManager.writeString(PREF_ADMIN_UID,loginResponseObj.getAdmin_uid());
-                                    showSnackBar(LOGIN_SUCCESSFULLY);
+                                    showLongSnackBar(LOGIN_SUCCESSFULLY);
                                     callActivity(NavigationActivity.class);
                                     finish();
                                 } else if (loginResponseObj.getStatus().getStatusCode() == FAILURE) {
-                                    showSnackBar(loginResponseObj.getStatus().getErrorDescription());
+                                    showLongSnackBar(loginResponseObj.getStatus().getErrorDescription());
                                 }
                             }
 
@@ -105,17 +106,17 @@ public class LoginActivity extends BaseActivity {
 
                 @Override
                 public void onError(int serviceId) {
-                    showSnackBar(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
+                    showLongSnackBar(SOMETHING_WENT_WRONG);
                 }
             };
 
     private boolean validateFields() {
         if (TextUtils.isEmpty(edtEnterUsername.getText().toString())) {
-            showSnackBar(PLEASE_ENTER_EMAIL);
+            showLongSnackBar(PLEASE_ENTER_EMAIL);
             return false;
         }
         if (TextUtils.isEmpty(edtEnterPassword.getText().toString())) {
-            showSnackBar(PLEASE_ENTER_PASSWORD);
+            showLongSnackBar(PLEASE_ENTER_PASSWORD);
             return false;
         }
 

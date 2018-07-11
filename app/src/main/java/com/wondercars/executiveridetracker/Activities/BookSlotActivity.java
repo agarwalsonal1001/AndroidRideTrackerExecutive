@@ -2,8 +2,10 @@ package com.wondercars.executiveridetracker.Activities;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -12,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.wondercars.executiveridetracker.Adapters.GenericSpinnerAdapter;
 import com.wondercars.executiveridetracker.Adapters.GridViewAdapter;
 import com.wondercars.executiveridetracker.BaseClasses.BaseActivity;
@@ -19,6 +23,8 @@ import com.wondercars.executiveridetracker.CustomClasses.AppProgressDialog;
 import com.wondercars.executiveridetracker.CustomClasses.ExpandableHeightGridView;
 import com.wondercars.executiveridetracker.Manager.PreferenceManager;
 import com.wondercars.executiveridetracker.R;
+import com.wondercars.executiveridetracker.Retrofit.DTOs.CheckIfSlotAvailable.CheckSlotRequestObj;
+import com.wondercars.executiveridetracker.Retrofit.DTOs.CheckIfSlotAvailable.CheckSlotResponseObj;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.GetAvailableSlots.GetAvailableSlotsRequestObj;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.GetAvailableSlots.GetAvailableSlotsResponseObj;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.GetCarModelsDTOs.CarModels;
@@ -40,6 +46,8 @@ import com.wondercars.executiveridetracker.Utils.AppConstants;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -49,21 +57,20 @@ import umer.accl.interfaces.RetrofitInterface;
 import umer.accl.retrofit.RetrofitParamsDTO;
 import umer.accl.utils.Constants;
 import umer.accl.utils.DateUtils;
+import umer.accl.utils.MyAppsLog;
 
 import static android.text.TextUtils.isEmpty;
 import static com.wondercars.executiveridetracker.Adapters.GridViewAdapter.numberOfSelectedSlots;
 import static com.wondercars.executiveridetracker.Application.ExecutiveRideTrackerApplicationClass.getTimeSlotsList;
+import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.ERROR;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.FAILURE;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
-import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.AVAILABLE_SLOTS_FROM_TIME;
-import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.AVAILABLE_SLOTS_TO_TIME;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.CAR_MODELS;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.CAR_REGISTRATION_NUMBER;
 import static com.wondercars.executiveridetracker.Utils.AppConstants.ResponseObjectType.VERIANT_DETAILS;
 import static umer.accl.utils.DateUtils.DD_MMM_YYYY_DASH_DATE_FORMAT;
 import static umer.accl.utils.DateUtils.DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT;
-import static umer.accl.utils.DateUtils.DD_MMM_YYYY_HH_MM_SS_SPACE_DATE_FORMAT;
-import static umer.accl.utils.DateUtils.DD_MMM_YYYY_SPACE_DATE_FORMAT;
+import static umer.accl.utils.DateUtils.HH_MM_TIME_FORMAT;
 import static umer.accl.utils.DateUtils.YYYY_MM_dd_DASH_DATE_FORMAT;
 
 public class BookSlotActivity extends BaseActivity {
@@ -86,16 +93,29 @@ public class BookSlotActivity extends BaseActivity {
     TextView tvSelectedDate;
     @BindView(R.id.gridv_timeslots)
     ExpandableHeightGridView gridvTimeslots;
-    @BindView(R.id.spinner_select_from_time)
-    Spinner spinnerSelectFromTime;
-    @BindView(R.id.spinner_select_to_time)
-    Spinner spinnerSelectToTime;
+    @BindView(R.id.ll_carAvailableOrNot)
+    LinearLayout ll_carAvailableOrNot;
+    @BindView(R.id.tv_fromTime)
+    TextView tvFromTime;
+    @BindView(R.id.tv_toTime)
+    TextView tvToTime;
+
+    /*@BindView(R.id.tv_fromTime)
+    TextView tvFromTime;
+    @BindView(R.id.tv_toTime)
+    TextView tvToTime;*/
+
+    /* @BindView(R.id.spinner_select_from_time)
+     Spinner spinnerSelectFromTime;
+     @BindView(R.id.spinner_select_to_time)
+     Spinner spinnerSelectToTime;*/
     private StringBuffer variantId, carModel, registrationNumber;
-    String carId = "", fromTime = "", toTime = "", currentTime = "";
+    String carId = "", fromTime = "", toTime = "", bookingSelectedDate = "",currentDate = "";
     private GetCarsRequestObj getCarsRequestObj;
-    private final int GET_CARS_SERVICE_ID = 2, GET_SLOTS_SERVICE_ID = 3, UPSERT_SLOTS_SERVICE_ID = 4, AVAILABLE_SLOTS_SERVICE_ID = 5;
+    private final int GET_CARS_SERVICE_ID = 2, GET_SLOTS_SERVICE_ID = 3, UPSERT_SLOTS_SERVICE_ID = 4, AVAILABLE_SLOTS_SERVICE_ID = 5, CHECK_SLOTISAVAILABLE_SERVICE_ID = 6;
     HashMap<Integer, BookingSlotsObj> bookingSlotsObjHashMap;
-    int fromTimeInInt = 0, toTimeInInt = 0;
+    int fromTimeInInt = 0, toTimeInInt = 0, dayOfMonthForRide = 0, month = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,15 +127,16 @@ public class BookSlotActivity extends BaseActivity {
     }
 
     private void init() {
-        currentTime = DateUtils.getCurrentDate(DateUtils.DD_MMM_YYYY_DASH_DATE_FORMAT);
+        currentDate = DateUtils.getCurrentDate(DateUtils.DD_MMM_YYYY_DASH_DATE_FORMAT);
         bookingSlotsObjHashMap = new HashMap<>();
         variantId = new StringBuffer();
         carModel = new StringBuffer();
         registrationNumber = new StringBuffer();
-        callGetVariantsAPI();
+        //callGetVariantsAPI();
         callGetCarModelsAPI();
     }
 
+/*
 
     private GetAvailableSlotsRequestObj getAvailableSlotsRequestObj() {
         GetAvailableSlotsRequestObj getAvailableSlotsRequestObj = new GetAvailableSlotsRequestObj();
@@ -135,12 +156,14 @@ public class BookSlotActivity extends BaseActivity {
                 APIConstants.baseurl, getAvailableSlotsRequestObj(), GetAvailableSlotsResponseObj.class,
                 APIConstants.RetrofitMethodConstants.GET_AVAILABLE_TIMESLOTS, AVAILABLE_SLOTS_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .setShowDialog(true)
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
+*/
 
-    private GetSlotsRequestObj getSlotsRequestObj() {
+   /* private GetSlotsRequestObj getSlotsRequestObj() {
         GetSlotsRequestObj getSlotsRequestObj = new GetSlotsRequestObj();
         getSlotsRequestObj.setAdmin_uid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
         getSlotsRequestObj.setBookingDate(tvSelectedDate.getText().toString());
@@ -154,9 +177,39 @@ public class BookSlotActivity extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.GET_SLOTS_API, GET_SLOTS_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
+    }*/
+
+
+    private CheckSlotRequestObj getCheckSlotRequestObj() {
+        CheckSlotRequestObj checkSlotRequestObj = new CheckSlotRequestObj();
+        try {
+            checkSlotRequestObj.setAdmin_uid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
+            checkSlotRequestObj.setBookingDate(DateUtils.formatStringDateFromOneToAnother(tvSelectedDate.getText().toString(), DD_MMM_YYYY_DASH_DATE_FORMAT, DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT));
+            checkSlotRequestObj.setFromTime(fromTime);
+            checkSlotRequestObj.setToTime(toTime);
+            checkSlotRequestObj.setCarId(carId);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return checkSlotRequestObj;
     }
+
+    private void callCheckIfSlotIsAvailableAPI() {
+        RetrofitParamsDTO retrofitParamsDTO = new RetrofitParamsDTO.RetrofitBuilder(this,
+                APIConstants.baseurl, getCheckSlotRequestObj(), CheckSlotResponseObj.class,
+                APIConstants.RetrofitMethodConstants.CHECK_IS_SLOT_AVAILABLE, CHECK_SLOTISAVAILABLE_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
+                .setProgressDialog(new AppProgressDialog(this))
+                .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
+                .build();
+        retrofitParamsDTO.execute(retrofitParamsDTO);
+        // mUserRegistrationService.userLogin(retrofitParamsDTO, getLoginApiRequestObject());
+    }
+
 
     private GetVeriantsRequestObj getVeriantsRequestObj() {
 
@@ -169,6 +222,7 @@ public class BookSlotActivity extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.GET_VARIANTS, GET_VARIANTS_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
         // mUserRegistrationService.userLogin(retrofitParamsDTO, getLoginApiRequestObject());
@@ -184,6 +238,7 @@ public class BookSlotActivity extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.GET_CAR_MODELS_API, GET_CARMODELS_SERVICEID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -204,6 +259,7 @@ public class BookSlotActivity extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.GET_CARS_API, GET_CARS_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -226,15 +282,16 @@ public class BookSlotActivity extends BaseActivity {
         return upsertSlotsRequestObj;
     }
 
-    private void callUpsertSlotAPI() {
+   /*  private void callUpsertSlotAPI() {
         RetrofitParamsDTO retrofitParamsDTO = new RetrofitParamsDTO.RetrofitBuilder(this,
                 APIConstants.baseurl, getUpsertSlotsRequestObj(), UpsertSlotsResponseObj.class,
                 APIConstants.RetrofitMethodConstants.UPSERT_SLOTS_API, UPSERT_SLOTS_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
-    }
+    }*/
 
     private void clearGridViewAdapter() {
         gridvTimeslots.setAdapter(null);
@@ -243,8 +300,8 @@ public class BookSlotActivity extends BaseActivity {
     }
 
     private void clearSpinnerAdapters() {
-        spinnerSelectFromTime.setAdapter(null);
-        spinnerSelectToTime.setAdapter(null);
+        /*spinnerSelectFromTime.setAdapter(null);
+        spinnerSelectToTime.setAdapter(null);*/
     }
 
 
@@ -281,13 +338,14 @@ public class BookSlotActivity extends BaseActivity {
                                     public void onNothingSelected(AdapterView<?> parent) {
                                         // variantStringBuilder.append(((VeriantsDetails) ((GenericSpinnerAdapter) (parent.getAdapter())).getItemList().get(0)).getVariantName());
                                         variantId.append(((VeriantsDetails) ((GenericSpinnerAdapter) (parent.getAdapter())).getItemList().get(0)).getVariantId());
+                                        callGetCarsAPI();
                                     }
                                 });
                             }
 
 
                         } else if (responseObj.getStatus().getStatusCode() == FAILURE) {
-                            showSnackBar(responseObj.getStatus().getErrorDescription());
+                            showLongSnackBar(responseObj.getStatus().getErrorDescription());
                         }
                     }
 
@@ -310,7 +368,8 @@ public class BookSlotActivity extends BaseActivity {
                                                 carModel.trimToSize();
                                             }
                                             carModel.append(((CarModels) ((GenericSpinnerAdapter) (parent.getAdapter())).getItemList().get(position)).getCarModelName());
-                                            callGetCarsAPI();
+                                            callGetVariantsAPI();
+                                            //callGetCarsAPI();
                                             clearSpinnerAdapters();
                                             //clearGridViewAdapter();
                                         }
@@ -318,13 +377,14 @@ public class BookSlotActivity extends BaseActivity {
                                         @Override
                                         public void onNothingSelected(AdapterView<?> parent) {
                                             carModel.append(((CarModels) ((GenericSpinnerAdapter) (parent.getAdapter())).getItemList().get(0)).getCarModelId());
-                                            callGetCarsAPI();
+                                            callGetVariantsAPI();
+                                            // callGetCarsAPI();
                                         }
                                     });
 
                                 }
                             } else if (carModelsResponseObject.getStatus().getStatusCode() == FAILURE) {
-                                showSnackBar(carModelsResponseObject.getStatus().getErrorDescription());
+                                showLongSnackBar(carModelsResponseObject.getStatus().getErrorDescription());
                             }
                         }
 
@@ -339,6 +399,7 @@ public class BookSlotActivity extends BaseActivity {
                         if (getCarsResponseObj != null && getCarsResponseObj.getStatus() != null) {
                             if (getCarsResponseObj.getStatus().getStatusCode() == SUCCESS) {
                                 if (getCarsResponseObj.getCars() != null && getCarsResponseObj.getCars().size() > 0) {
+                                    ll_carAvailableOrNot.setVisibility(View.VISIBLE);
                                     GenericSpinnerAdapter genericSpinnerAdapter = new GenericSpinnerAdapter(BookSlotActivity.this, 1,
                                             getCarsResponseObj.getCars(), CAR_REGISTRATION_NUMBER);
                                     spinnerSelectRegistrationNumber.setAdapter(genericSpinnerAdapter);
@@ -362,13 +423,16 @@ public class BookSlotActivity extends BaseActivity {
                                         }
                                     });
                                 } else {
-                                    GenericSpinnerAdapter genericSpinnerAdapter = new GenericSpinnerAdapter(BookSlotActivity.this, 1,
-                                            new ArrayList<CarDetailObj>(), CAR_REGISTRATION_NUMBER);
-                                    spinnerSelectRegistrationNumber.setAdapter(genericSpinnerAdapter);
-                                    showSnackBar("No car available");
+                                    ll_carAvailableOrNot.setVisibility(View.GONE);
+                                   /* GenericSpinnerAdapter genericSpinnerAdapter = new GenericSpinnerAdapter(BookSlotActivity.this, 1,
+                                            new ArrayList<CarDetailObj>(), CAR_REGISTRATION_NUMBER);*/
+                                    spinnerSelectRegistrationNumber.setAdapter(null);
+                                    showLongSnackBar("No car available against selected model and variant.'/n' Please select different model or variant");
                                 }
                             } else if (getCarsResponseObj.getStatus().getStatusCode() == FAILURE) {
-                                showSnackBar(getCarsResponseObj.getStatus().getErrorDescription());
+                                ll_carAvailableOrNot.setVisibility(View.GONE);
+                                showLongSnackBar("No car available against selected model and variant.");
+                                MyAppsLog.e("Error in GET_CARS_SERVICE_ID service", getCarsResponseObj.getStatus().getErrorDescription());
                             }
                         }
 //                        //
@@ -377,7 +441,7 @@ public class BookSlotActivity extends BaseActivity {
                     }
                     break;
 
-                case GET_SLOTS_SERVICE_ID:
+               /* case GET_SLOTS_SERVICE_ID:
                     try {
 
                         GetSlotsResponseObj getSlotsResponseObj = (GetSlotsResponseObj) object;
@@ -385,8 +449,6 @@ public class BookSlotActivity extends BaseActivity {
                             if (getSlotsResponseObj.getStatus().getStatusCode() == SUCCESS) {
                                 ArrayList<BookingSlotsObj> slotsList = getTimeSlotsList();
                                 if (getSlotsResponseObj.getBookingSlots() != null && getSlotsResponseObj.getBookingSlots().size() > 0) {
-
-
                                     for (int i = 0; i < getSlotsResponseObj.getBookingSlots().size(); i++) {
                                         String timeFrom = DateUtils.formatStringDateFromOneToAnother(getSlotsResponseObj.getBookingSlots().get(i).getFromTime(), DateUtils.MMM_DD_YYYY_hh_mm_ss_a_DATE_FORMAT, DateUtils.HH_MM_TIME_FORMAT);
                                         String timeTo = DateUtils.formatStringDateFromOneToAnother(getSlotsResponseObj.getBookingSlots().get(i).getToTime(), DateUtils.MMM_DD_YYYY_hh_mm_ss_a_DATE_FORMAT, DateUtils.HH_MM_TIME_FORMAT);
@@ -401,14 +463,14 @@ public class BookSlotActivity extends BaseActivity {
                                     }
 
 
-                                } /*else {
+                                } *//*else {
                                     gridvTimeslots.setVisibility(View.GONE);
                                     //   GridViewAdapter gridViewAdapter = new GridViewAdapter(BookSlotActivity.this, getTimeSlotsList());
                                     gridvTimeslots.setAdapter(null);
                                     showSnackBar("No Slot available");
-                                }*/
+                                }*//*
                                 gridvTimeslots.setVisibility(View.VISIBLE);
-                                GridViewAdapter gridViewAdapter = new GridViewAdapter(BookSlotActivity.this, slotsList /*getSlotsResponseObj.getBookingSlots()*/);
+                                GridViewAdapter gridViewAdapter = new GridViewAdapter(BookSlotActivity.this, slotsList *//*getSlotsResponseObj.getBookingSlots()*//*);
                                 gridvTimeslots.setAdapter(gridViewAdapter);
                                 gridvTimeslots.setExpanded(true);
                                 gridvTimeslots.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -424,7 +486,7 @@ public class BookSlotActivity extends BaseActivity {
                                                 numberOfSelectedSlots = numberOfSelectedSlots + 1;
                                                 bookingSlotsObjHashMap.put(position, (BookingSlotsObj) ((GridViewAdapter) parent.getAdapter()).getListOfData().get(position));
                                             } else {
-                                                showSnackBar("You can select maximum two slots");
+                                                showLongSnackBar("You can select maximum two slots");
                                             }
                                         }
                                         ((GridViewAdapter) parent.getAdapter()).notifyDataSetChanged();
@@ -436,7 +498,7 @@ public class BookSlotActivity extends BaseActivity {
                         e.printStackTrace();
                     }
 
-                    break;
+                    break;*/
 
 
                 case UPSERT_SLOTS_SERVICE_ID:
@@ -452,13 +514,13 @@ public class BookSlotActivity extends BaseActivity {
                             });
 
                         } else {
-                            showSnackBar(getSlotsResponseObj.getStatus().getErrorDescription());
+                            showLongSnackBar(getSlotsResponseObj.getStatus().getErrorDescription());
                         }
                     }
 
                     break;
 
-                case AVAILABLE_SLOTS_SERVICE_ID:
+               /* case AVAILABLE_SLOTS_SERVICE_ID:
 
                     GetAvailableSlotsResponseObj getAvailableSlotsResponseObj = (GetAvailableSlotsResponseObj) object;
 
@@ -470,17 +532,20 @@ public class BookSlotActivity extends BaseActivity {
                                 spinnerSelectFromTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                     @Override
                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        fromTime = currentTime + " " + String.valueOf(((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(position)) + ":00:00";
+                                        fromTime = bookingSelectedDate + " " + String.valueOf(((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(position)) + ":00:00";
                                         fromTimeInInt = (int) ((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(position);
                                     }
 
                                     @Override
                                     public void onNothingSelected(AdapterView<?> parent) {
-                                        fromTime = currentTime + " " + String.valueOf(((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(0)) + ":00:00";
+                                        fromTime = bookingSelectedDate + " " + String.valueOf(((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(0)) + ":00:00";
                                         fromTimeInInt = (int) ((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(0);
                                     }
                                 });
 
+                            } else {
+                                fromTime = "";
+                                fromTimeInInt = -1;
                             }
                             if (getAvailableSlotsResponseObj.getToTimesAvailable() != null && getAvailableSlotsResponseObj.getToTimesAvailable().size() > 0) {
                                 GenericSpinnerAdapter genericSpinnerAdapter = new GenericSpinnerAdapter(BookSlotActivity.this, 0, getAvailableSlotsResponseObj.getToTimesAvailable(), AVAILABLE_SLOTS_TO_TIME);
@@ -488,17 +553,35 @@ public class BookSlotActivity extends BaseActivity {
                                 spinnerSelectToTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                     @Override
                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        toTime = currentTime + " " + String.valueOf(((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(position)) + ":00:00";
+                                        toTime = bookingSelectedDate + " " + String.valueOf(((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(position)) + ":00:00";
                                         toTimeInInt = (int) ((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(position);
                                     }
 
                                     @Override
                                     public void onNothingSelected(AdapterView<?> parent) {
-                                        toTime = currentTime + " " + String.valueOf(((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(0)) + "00:00";
+                                        toTime = bookingSelectedDate + " " + String.valueOf(((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(0)) + "00:00";
                                         toTimeInInt = (int) ((GenericSpinnerAdapter) parent.getAdapter()).getItemList().get(0);
                                     }
                                 });
+                            } else {
+                                toTime = "";
+                                toTimeInInt = -1;
                             }
+                        }
+                    }
+                    break;*/
+
+
+                case CHECK_SLOTISAVAILABLE_SERVICE_ID:
+
+                    CheckSlotResponseObj checkSlotResponseObj = (CheckSlotResponseObj) object;
+                    if (checkSlotResponseObj != null && checkSlotResponseObj.getStatus() != null) {
+                        if (checkSlotResponseObj.getStatus().getStatusCode() == SUCCESS && checkSlotResponseObj.isSlotAvailable()) {
+                            Intent intent = new Intent(BookSlotActivity.this, CustomerListActivity.class);
+                            intent.putExtra("slotInfo", getUpsertSlotsRequestObj());
+                            startActivity(intent);
+                        } else if (checkSlotResponseObj.getStatus().getStatusCode() == FAILURE || checkSlotResponseObj.isSlotAvailable() == false) {
+                            showLongToast(checkSlotResponseObj.getStatus().getErrorDescription() + "");
                         }
                     }
                     break;
@@ -510,13 +593,13 @@ public class BookSlotActivity extends BaseActivity {
 
         @Override
         public void onError(int serviceId) {
-            showSnackBar(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
+            showLongSnackBar(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
         }
     };
 
 
-    @OnClick({R.id.ll_pick_date, R.id.button_next})
-    public void onClick(View view) {
+    @OnClick({R.id.ll_pick_date, R.id.button_next, R.id.tv_fromTime, R.id.tv_toTime})
+    public void onClick(final View view) {
         switch (view.getId()) {
             case R.id.ll_pick_date:
                 DateUtils.showDatePicker(BookSlotActivity.this, R.style.datepicker, 2018, 0, 1, onDateSetListener);
@@ -526,16 +609,51 @@ public class BookSlotActivity extends BaseActivity {
                    /* if ((toTimeInInt - fromTimeInInt) > 2) {
                         showSnackBar("The time difference between 2 slots can not exceed 2 hours");
                     } else*/
-                        if (fromTimeInInt > toTimeInInt) {
-                        showSnackBar("From-Time should be less than To-Time");
-                    } else if (fromTimeInInt == toTimeInInt) {
-                        showSnackBar("To-Time should be greater than From-Time");
 
+                    if (fromTimeInInt == -1) {
+                        showLongSnackBar("Please select from time.");
+                    } else if (toTimeInInt == -1) {
+                        showLongSnackBar("Please select to time");
                     } else {
-                        Intent intent = new Intent(BookSlotActivity.this,CustomerListActivity.class);
-                        intent.putExtra("slotInfo",getUpsertSlotsRequestObj());
-                        startActivity(intent);
-                        //callUpsertSlotAPI();
+                        if (!TextUtils.isEmpty(tvSelectedDate.getText().toString())/* && DateUtils.getCurrentDate(DD_MMM_YYYY_DASH_DATE_FORMAT).equalsIgnoreCase(tvSelectedDate.getText().toString())*/) {
+
+                            Date fromTimeDa = DateUtils.getStringToDate(fromTime, DateUtils.DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT);
+                            Date toTimeDT = DateUtils.getStringToDate(toTime, DateUtils.DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT);
+                            int currentHour = getCurrentYearCalender().get(Calendar.HOUR_OF_DAY);
+
+                            if(currentDate.equalsIgnoreCase(bookingSelectedDate)) {
+                                if (currentHour > fromTimeInInt && currentHour != fromTimeInInt) {
+                                    showLongSnackBar("From-Time should be greater than current time");
+                                }
+                            }else {
+                                if (fromTimeDa.after(toTimeDT)) {
+                                    showLongSnackBar("From-Time should be less than To-Time");
+                                } else if (fromTimeDa.equals(toTimeDT)) {
+                                    showLongSnackBar("To-Time should be greater than From-Time");
+                                } else {
+                                    callCheckIfSlotIsAvailableAPI();
+                                }
+                            }
+
+
+                           /* if (currentHour > fromTimeInInt && currentHour != fromTimeInInt) {
+                                showLongSnackBar("From-Time should be greater than current time");
+                            } else {
+                                if (fromTimeInInt > toTimeInInt) {
+                                    showLongSnackBar("From-Time should be less than To-Time");
+                                } else if (fromTimeInInt == toTimeInInt) {
+                                    showLongSnackBar("To-Time should be greater than From-Time");
+
+                                } else {
+
+                                    callCheckIfSlotIsAvailableAPI();
+                                    Intent intent = new Intent(BookSlotActivity.this, CustomerListActivity.class);
+                                    intent.putExtra("slotInfo", getUpsertSlotsRequestObj());
+                                    startActivity(intent);
+                                    //callUpsertSlotAPI();
+                                }
+                            }*/
+                        }
                     }
                 }
                 // if (bookingSlotsObjHashMap.size() > 0) {
@@ -544,13 +662,121 @@ public class BookSlotActivity extends BaseActivity {
                     showSnackBar("Please select slot");
                 }*/
                 break;
+
+            case R.id.tv_fromTime:
+            case R.id.tv_toTime:
+                if (!isEmpty(bookingSelectedDate)) {
+
+                    final Calendar c = Calendar.getInstance();
+                    int hr = c.get(Calendar.HOUR_OF_DAY);
+                    int min = c.get(Calendar.MINUTE);
+                /*new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                        updateTime(hourOfDay, minute, view.getId());
+                    }
+                }, hr, min, false).show(getFragmentManager(),"FromTime");*/
+
+                    TimePickerDialog tpd = TimePickerDialog.newInstance(
+                            new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(RadialPickerLayout mview, int hourOfDay, int minute, int second) {
+                                    updateTime(hourOfDay, minute, view.getId());
+                                }
+                            },
+                            hr,
+                            min,
+                            false
+                    );
+
+                    tpd.vibrate(true);
+                    tpd.dismissOnPause(true);
+                    tpd.enableSeconds(false);
+                    tpd.setAccentColor(Color.parseColor(AppConstants.ColorStrings.colorAccent));
+                    tpd.setTitle("Pick Time");
+                    int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+                    int monthOfYear = c.get(Calendar.MONTH);
+                    if (c.get(Calendar.DAY_OF_MONTH) == dayOfMonthForRide && hr < 20) {
+                        tpd.setMinTime(hr, min,
+                                c.get(Calendar.SECOND));
+                        tpd.setMaxTime(20, 0, 0);
+                        tpd.show(getFragmentManager(), "Timepickerdialog");
+                    } else if (c.get(Calendar.DAY_OF_MONTH) < dayOfMonthForRide && monthOfYear == month || c.get(Calendar.DAY_OF_MONTH) > dayOfMonthForRide && monthOfYear < month) {
+                        tpd.setMinTime(8, 0,
+                                c.get(Calendar.SECOND));
+                        tpd.setMaxTime(20, 0, 0);
+                        tpd.show(getFragmentManager(), "Timepickerdialog");
+                    } else {
+                        showLongSnackBar("Showroom is closed for Today");
+                    }
+                    break;
+                } else {
+                    showSnackBar("Please select date first");
+                }
         }
     }
 
+    private void updateTime(int hours, int mins, int id) {
+        int hoursInNotInAMPM = hours;
+        String timeSet = "";
+        if (hours > 12) {
+            hours -= 12;
+            timeSet = "PM";
+        } else if (hours == 0) {
+            hours += 12;
+            timeSet = "AM";
+        } else if (hours == 12)
+            timeSet = "PM";
+        else
+            timeSet = "AM";
+        String minutes = "";
+        if (mins < 10)
+            minutes = "0" + mins;
+        else
+            minutes = String.valueOf(mins);
+        String apiFormatTime = new StringBuilder().append(hoursInNotInAMPM).append(':').append(minutes).toString();
+        String aTime = new StringBuilder().append(hours).append(':').append(minutes).append(" ").append(timeSet).toString();
+
+        switch (id) {
+
+            case R.id.tv_fromTime:
+
+                tvFromTime.setText(aTime);
+                fromTime = bookingSelectedDate + " " + apiFormatTime + ":00";
+                fromTimeInInt = hoursInNotInAMPM;
+
+                break;
+
+            case R.id.tv_toTime:
+
+                tvToTime.setText(aTime);
+                toTime = bookingSelectedDate + " " + apiFormatTime + ":00";
+                toTimeInInt = hoursInNotInAMPM;
+
+                break;
+        }
+
+    }
+
+
+    private void recreateDateTimeAfterDateChange(){
+        try {
+            if(!isEmpty(fromTime))
+            fromTime = bookingSelectedDate + " " + DateUtils.formatStringDateFromOneToAnother(fromTime,DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT,HH_MM_TIME_FORMAT) + ":00";
+            if(!isEmpty(toTime))
+            toTime = bookingSelectedDate + " " + DateUtils.formatStringDateFromOneToAnother(toTime,DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT,HH_MM_TIME_FORMAT) + ":00";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
     private boolean validateField() {
 
         if (tvSelectedDate.getText().toString().equalsIgnoreCase("Pick Date") || isEmpty(tvSelectedDate.getText().toString())) {
-            showLongSnackBar("Date and Time fields can not be blank.");
+            showLongSnackBar("Date can not be blank.");
+            return false;
+        }
+        if (isEmpty(fromTime)) {
+            showLongSnackBar("Please select From Time.");
             return false;
         }
         if (isEmpty(toTime)) {
@@ -558,10 +784,6 @@ public class BookSlotActivity extends BaseActivity {
             return false;
         }
 
-        if (isEmpty(fromTime)) {
-            showLongSnackBar("Please select From Time.");
-            return false;
-        }
 
         return true;
     }
@@ -570,11 +792,20 @@ public class BookSlotActivity extends BaseActivity {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             try {
-                tvSelectedDate.setText(DateUtils.formatStringDateFromOneToAnother(DateUtils.getDateIn_YYYYMMdd_Dash_Format(year, month, dayOfMonth), YYYY_MM_dd_DASH_DATE_FORMAT, DD_MMM_YYYY_DASH_DATE_FORMAT));
+                BookSlotActivity.this.month = month;
+                dayOfMonthForRide = dayOfMonth;
+                bookingSelectedDate = DateUtils.formatStringDateFromOneToAnother(DateUtils.getDateIn_YYYYMMdd_Dash_Format(year, month, dayOfMonth), YYYY_MM_dd_DASH_DATE_FORMAT, DD_MMM_YYYY_DASH_DATE_FORMAT);
+                tvSelectedDate.setText(bookingSelectedDate);
+                recreateDateTimeAfterDateChange();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            callAvailableGetSlotAPI();
+            // callAvailableGetSlotAPI();
         }
     };
+
+    public Calendar getCurrentYearCalender() {
+        Calendar cal = Calendar.getInstance();
+        return cal;
+    }
 }

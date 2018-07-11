@@ -34,6 +34,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.08"
                 android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                android:maxLength="13"
                 android:singleLine="true" />
 
             <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView

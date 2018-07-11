@@ -49,6 +49,7 @@ import com.wondercars.executiveridetracker.CustomClasses.AppProgressDialog;
 import com.wondercars.executiveridetracker.Manager.PreferenceManager;
 import com.wondercars.executiveridetracker.Modules.DirectionFinder;
 import com.wondercars.executiveridetracker.Modules.DirectionFinderListener;
+import com.wondercars.executiveridetracker.Modules.Duration;
 import com.wondercars.executiveridetracker.Modules.Route;
 import com.wondercars.executiveridetracker.R;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.UpsertRideDTOs.UpsertRideRequestObj;
@@ -70,6 +71,7 @@ import umer.accl.utils.MyAppsLog;
 
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.FAILURE;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ToastMessages.SOMETHING_WENT_WRONG;
 
 public class StartRideActivity extends BaseActivity implements OnMapReadyCallback, DirectionFinderListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -94,6 +96,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
     private Location mLastLocation, startLocation;
     private Marker mCurrLocationMarker;
     UpsertRideRequestObj upsertRideRequestObj;
+    private Duration mDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,6 +246,9 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                             upsertRideRequestObj.setStartLat(startLatLng[0]);
                             upsertRideRequestObj.setStartLong(startLatLng[1]);
                         }
+                        if(mDuration!=null){
+                            upsertRideRequestObj.setExpected_duration_of_travel(String.valueOf(mDuration.value));
+                        }
                         callUpsertRideAPI(upsertRideRequestObj, START_RIDE_SERVICE_ID);
                     }
                 } else {
@@ -251,6 +257,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                         upsertRideRequestObj.setEndLat(endLatLng[0]);
                         upsertRideRequestObj.setEndLong(endLatLng[1]);
                     }
+                    upsertRideRequestObj.setRide_completed_flg("Y");
                     callUpsertRideAPI(upsertRideRequestObj, END_RIDE_SERVICE_ID);
                 }
 
@@ -264,6 +271,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                 APIConstants.RetrofitMethodConstants.UPSERT_RIDE_API, serviceid, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -281,9 +289,9 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                             buttonStartRide.setTag("stopride");
                             buttonStartRide.setText("Stop Ride");
                             upsertRideRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
-                            startService(new Intent(getApplicationContext(), MyService.class));
+                          //  startService(new Intent(getApplicationContext(), MyService.class));
                         } else if (upsertRideResponseObj.getStatus().getStatusCode() == FAILURE) {
-                            showSnackBar(upsertRideResponseObj.getStatus().getErrorDescription());
+                            showLongSnackBar(upsertRideResponseObj.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -292,12 +300,12 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
                     stopService(new Intent(getApplicationContext(), MyService.class));
                     if (upsertRideResponse != null && upsertRideResponse.getStatus() != null) {
                         if (upsertRideResponse.getStatus().getStatusCode() == SUCCESS) {
-                            showSnackBar("Ride stoped successfully");
+                            showLongSnackBar("Ride stoped successfully");
                             PreferenceManager.writeString(PreferenceManager.PREF_RIDE_ID, "");
                             callActivity(NavigationActivity.class);
                             finish();
                         } else if (upsertRideResponse.getStatus().getStatusCode() == FAILURE) {
-                            showSnackBar(upsertRideResponse.getStatus().getErrorDescription());
+                            showLongSnackBar(upsertRideResponse.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -306,7 +314,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
 
         @Override
         public void onError(int serviceId) {
-
+            showLongSnackBar(SOMETHING_WENT_WRONG);
         }
     };
 
@@ -314,7 +322,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
         if (startAndEndLocation != null && startAndEndLocation.size() == 2) {
             return true;
         } else {
-            showSnackBar("Please select destination to Start a ride");
+            showLongSnackBar("Please select destination to Start a ride");
         }
 
         return false;
@@ -386,7 +394,13 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
 
+        Duration duration = null;
         for (Route route : routes) {
+            if(duration==null) {
+                duration = route.duration;
+                mDuration =null;
+                mDuration = duration;
+            }
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
 //            ((TextView) findViewById(R.id.tvDuration)).setText(route.duration.text);
 //            ((TextView) findViewById(R.id.tvDistance)).setText(route.distance.text);
@@ -476,7 +490,7 @@ public class StartRideActivity extends BaseActivity implements OnMapReadyCallbac
         endPoint.setLatitude(17.375775);
         endPoint.setLongitude(78.469218);*/
 
-        showSnackBar(startPoint.distanceTo(endPoint) / 1000 + "");
+        showLongSnackBar(startPoint.distanceTo(endPoint) / 1000 + "");
         return startPoint.distanceTo(endPoint) / 1000;
     }
 

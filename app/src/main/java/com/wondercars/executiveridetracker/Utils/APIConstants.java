@@ -14,6 +14,7 @@ public interface APIConstants {
         String ADMIN_LOGIN_API ="/adminlogin";
         String CREATE_EXECUTIVES_API="/upsertUser";
         String GET_EXECUTIVES= "/getExecutives";
+        String GET_EXECUTIVESBYID= "/getExecutiveByID";
         String GET_VARIANTS="/getVariants";
         String CREATE_CAR_API = "/createCar";
         String GET_CARS_API ="/getCars";
@@ -29,6 +30,9 @@ public interface APIConstants {
         String VALIDATE_OTP = "/validateOtp";
         String GET_AVAILABLE_TIMESLOTS ="/getAvailableTimeSlots";
         String VIEW_ALL_RIDES = "/viewAllRides";
+        String  UPDATE_CUSTOMER_BOOKING_SLOT = "/updateCustomerBookingSlot";
+        String VIEW_ALL_TESTDRIVES = "/viewAllTestDrives";
+        String CHECK_IS_SLOT_AVAILABLE = "/checkIfSlotIsAvailable";
     }
 
 

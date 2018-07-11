@@ -10,6 +10,15 @@ public class GetSlotsRequestObj {
     String bookingDate;
     String admin_uid;
     String uid;
+    private String ride_completed_flg;
+
+    public String getRide_completed_flg() {
+        return ride_completed_flg;
+    }
+
+    public void setRide_completed_flg(String ride_completed_flg) {
+        this.ride_completed_flg = ride_completed_flg;
+    }
 
     public String getUid() {
         return uid;

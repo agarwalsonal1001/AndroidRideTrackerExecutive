@@ -41,7 +41,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.15"
             android:padding="@dimen/activity_margin_10dp"
-            android:src="@android:drawable/ic_menu_rotate" />
+            android:src="@drawable/ic_active_resend_otp" />
     </LinearLayout>
 
 

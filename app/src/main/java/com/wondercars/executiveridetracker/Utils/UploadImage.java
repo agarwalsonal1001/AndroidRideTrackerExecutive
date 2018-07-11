@@ -1,5 +1,7 @@
 package com.wondercars.executiveridetracker.Utils;
 
+import android.util.Log;
+
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.google.gson.Gson;
@@ -13,11 +15,13 @@ import java.io.File;
 
 public class UploadImage{
 
+
     public static void upload(final File imageToUpload, final UpsertTestDriveRequestObj upsertTestDriveRequestObj){
         new Thread(new Runnable() {
             public void run() {
                 String license_image_url=uploadImageWithCloudinary(imageToUpload);
                 if(license_image_url!=null && !license_image_url.trim().isEmpty()) {
+                    Log.i("Image Upload Path",license_image_url);
                     //update url to database
 
                 }
@@ -57,7 +61,7 @@ public class UploadImage{
     }
 
     public static void main(String args[]){
-        File toUpload = new File("C:\\AndroidWorkspace\\Ride Tracker Executive App\\AndroidRideTrackerExecutive\\app\\src\\main\\assets\\sample.JPG");
+        File toUpload = new File("/home/acer/Desktop/Screenshot from 2018-01-07 14-47-35.png");
         UpsertTestDriveRequestObj upsertTestDriveRequestObj=new UpsertTestDriveRequestObj();
         upsertTestDriveRequestObj.setCarId("567899d5-6cf8-4620-a82c-65d1239c043f");
         upsertTestDriveRequestObj.setAdmin_uid("6f33355e-e27c-4389-bc55-d1e0506ce035");

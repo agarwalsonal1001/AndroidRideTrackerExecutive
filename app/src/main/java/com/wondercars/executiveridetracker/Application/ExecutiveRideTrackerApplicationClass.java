@@ -9,6 +9,8 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 
 import com.google.gson.Gson;
+import com.wondercars.executiveridetracker.Database.DatabaseManager;
+import com.wondercars.executiveridetracker.Database._BookingSlotsDB;
 import com.wondercars.executiveridetracker.Manager.PreferenceManager;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.GetSlotsDTOs.BookingSlotsObj;
 
@@ -34,6 +36,8 @@ public class ExecutiveRideTrackerApplicationClass extends Application {
         mGson = new Gson();
         tManager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
         PreferenceManager.setSharedPreferences();
+        DatabaseManager.getInstance(getApplicationContext());
+        _BookingSlotsDB.getInstance(getApplicationContext());
     }
 
     public static ExecutiveRideTrackerApplicationClass getInstance() {

@@ -8,6 +8,15 @@ public class ViewRidesRequestObj {
 
     private String admin_uid;
 
+    private String ride_completed_flg;
+
+    public String getRide_completed_flg() {
+        return ride_completed_flg;
+    }
+
+    public void setRide_completed_flg(String ride_completed_flg) {
+        this.ride_completed_flg = ride_completed_flg;
+    }
     public String getAdminUid() { return this.admin_uid; }
 
     public void setAdminUid(String admin_uid) { this.admin_uid = admin_uid; }

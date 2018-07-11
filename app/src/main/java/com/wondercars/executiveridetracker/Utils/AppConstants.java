@@ -13,7 +13,7 @@ public interface AppConstants {
     String EXECUTIVES_CREATED_SUCCESSFULLY = "Created Executive successfully";
 
     public interface ToastMessages {
-        String SOMETHING_WENT_WRONG = "Something went wrong...";
+        String SOMETHING_WENT_WRONG = "Connection error. Please try again...";
     }
 
     public interface ResponseObjectType {

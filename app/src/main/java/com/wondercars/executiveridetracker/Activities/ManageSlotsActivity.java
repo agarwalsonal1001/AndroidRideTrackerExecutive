@@ -30,6 +30,7 @@ import umer.accl.utils.Constants;
 import umer.accl.utils.DateUtils;
 
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ToastMessages.SOMETHING_WENT_WRONG;
 
 public class ManageSlotsActivity extends BaseActivity {
 
@@ -62,6 +63,7 @@ public class ManageSlotsActivity extends BaseActivity {
         GetSlotsRequestObj getSlotsRequestObj = new GetSlotsRequestObj();
         getSlotsRequestObj.setUid(PreferenceManager.readString(PreferenceManager.PREF_INDIVISUAL_ID));
         getSlotsRequestObj.setAdmin_uid(PreferenceManager.readString(PreferenceManager.PREF_ADMIN_UID));
+        getSlotsRequestObj.setRide_completed_flg("N");
         return getSlotsRequestObj;
     }
 
@@ -71,6 +73,7 @@ public class ManageSlotsActivity extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.GET_SLOTS_API, GET_SLOTS_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -99,6 +102,7 @@ public class ManageSlotsActivity extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.UPSERT_SLOTS_API, UPSERT_SLOTS_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -133,7 +137,11 @@ public class ManageSlotsActivity extends BaseActivity {
                                     }
                                 });
                                 recyclerView.setAdapter(manageSlotsRecyclerAdapter);
+                            }else {
+                                showSnackBar("No Slots Available");
                             }
+                        } else {
+                            showLongSnackBar(getSlotsResponseObj.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -145,19 +153,17 @@ public class ManageSlotsActivity extends BaseActivity {
                             showLongSnackBar("Slot deleted Successfully");
                             callGetSlotAPI();
                         } else {
-                            showSnackBar(getManageSlotsResponseObj.getStatus().getErrorDescription());
+                            showLongSnackBar(getManageSlotsResponseObj.getStatus().getErrorDescription());
                         }
                     }
 
                     break;
             }
-
-
         }
 
         @Override
         public void onError(int serviceId) {
-            showSnackBar(AppConstants.ToastMessages.SOMETHING_WENT_WRONG);
+            showLongSnackBar(SOMETHING_WENT_WRONG);
         }
     };
 }

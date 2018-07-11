@@ -28,6 +28,7 @@ import static android.text.TextUtils.isEmpty;
 import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_ADMIN_UID;
 import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_INDIVISUAL_ID;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ToastMessages.SOMETHING_WENT_WRONG;
 
 public class EnterCustomerDetailActivity extends BaseActivity {
 
@@ -74,6 +75,7 @@ public class EnterCustomerDetailActivity extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.UPSERT_CUSTOMER_API, UPSERT_CUSTOMER_API_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -103,6 +105,12 @@ public class EnterCustomerDetailActivity extends BaseActivity {
                 showLongSnackBar("Please enter Customer Enquiry Number");
                 etEnquirynumber.setError("Please enter Customer Enquiry Number");
                 return false;
+            } else {
+                if (!(isAlphanumeric(etEnquirynumber.getText().toString()) && isAlphaChar(etEnquirynumber.getText().toString())))  {
+                    showLongSnackBar("Customer Enquiry Number should be alphanumeric");
+                    etEnquirynumber.setError("Customer Enquiry Number should be alphanumeric");
+                    return false;
+                }
             }
 
             if (isEmpty(etCustomername.getText().toString())) {
@@ -116,22 +124,59 @@ public class EnterCustomerDetailActivity extends BaseActivity {
                 showLongSnackBar("Please enter Customer Mobile Number");
                 return false;
             } else if (etCustomerMobileNumber.getText().toString().length() < 10) {
-                etCustomerMobileNumber.setError("Please enter correct Customer Mobile Number");
-                showLongSnackBar("Please enter correct Customer Mobile Number");
+                etCustomerMobileNumber.setError("Please enter valid Customer Mobile Number");
+                showLongSnackBar("Please enter valid Customer Mobile Number");
                 return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        /*if (isEmpty(etEmailID.getText().toString())) {
+        if (isEmpty(etEmailID.getText().toString())) {
             showLongSnackBar("Please enter Customer Email ID");
             etEmailID.setError("Please enter Customer Email ID");
             return false;
-        }*/
+        } else if (!validateEmailAddress(etEmailID.getText().toString())) {
+            etEmailID.setError("Please enter correct Customer Email ID");
+            showLongSnackBar("Please enter correct Customer Customer Email ID");
+            return false;
+        }
         return true;
     }
 
+    public boolean isAlphanumeric(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (Character.isDigit(c))
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean isAlphaChar(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (Character.isLetter(c))
+                return true;
+        }
+
+        return false;
+    }
+
+    private boolean validateEmailAddress(String email) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+        if (email.matches(emailPattern)) {
+            return true;
+        }
+
+        return false;
+    }
+    public boolean isAlphaNumeric(String s) {
+        String pattern = "^[a-zA-Z0-9]*$";
+        return s.matches(pattern);
+    }
 
     RetrofitInterface retrofitInterface = new RetrofitInterface() {
         @Override
@@ -149,7 +194,7 @@ public class EnterCustomerDetailActivity extends BaseActivity {
                                 customer.setEnquiryNumber(etEnquirynumber.getText().toString());
                                 customer.setMobileNumber(etCustomerMobileNumber.getText().toString());
                                 customer.setCustomer_id(upsertCustomerDetailsResponseObj.getCustomer_id());
-                                showLongToast("Details saved successfully");
+                                // showLongToast("Details saved successfully");
                                 CustomerListActivity.customerArrayList.add(customer);
                                 //CustomerListActivity.booking_id = upsertCustomerDetailsResponseObj.getBooking_id();
                                 onBackPressed();
@@ -164,7 +209,7 @@ public class EnterCustomerDetailActivity extends BaseActivity {
 
         @Override
         public void onError(int i) {
-
+            showLongSnackBar(SOMETHING_WENT_WRONG);
         }
     };
 

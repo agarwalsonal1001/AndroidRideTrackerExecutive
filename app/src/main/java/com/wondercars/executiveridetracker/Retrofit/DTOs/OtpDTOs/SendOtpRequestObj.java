@@ -9,6 +9,15 @@ public class SendOtpRequestObj {
    String customer_mobile;
     String id;
     String customer_email;
+    String isTestDrive;
+
+    public String getIsTestDrive() {
+        return isTestDrive;
+    }
+
+    public void setIsTestDrive(String isTestDrive) {
+        this.isTestDrive = isTestDrive;
+    }
 
     public String getCustomer_email() {
         return customer_email;

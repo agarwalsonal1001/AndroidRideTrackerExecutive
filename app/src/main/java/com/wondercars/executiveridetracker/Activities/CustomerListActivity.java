@@ -1,6 +1,7 @@
 package com.wondercars.executiveridetracker.Activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.wondercars.executiveridetracker.Adapters.CustomersListRecyclerAdapter;
 import com.wondercars.executiveridetracker.BaseClasses.BaseActivity;
@@ -46,6 +48,7 @@ import umer.accl.interfaces.RetrofitInterface;
 import umer.accl.retrofit.RetrofitParamsDTO;
 import umer.accl.utils.Constants;
 import umer.accl.utils.DateUtils;
+import umer.accl.utils.MyAppsLog;
 
 import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_ADMIN_UID;
 import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_INDIVISUAL_ID;
@@ -54,6 +57,7 @@ import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF
 import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_TESTDRIVE_ID;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.FAILURE;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ToastMessages.SOMETHING_WENT_WRONG;
 import static umer.accl.utils.DateUtils.DD_MMM_YYYY_HH_MM_SS_DASH_DATE_FORMAT;
 import static umer.accl.utils.DateUtils.MMM_DD_YYYY_hh_mm_ss_a_DATE_FORMAT;
 
@@ -108,10 +112,16 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        setActionBar(toolbar, "Book Slot For Customers");
+        setActionBar(toolbar, "Customers");
 
         if (getIntent().hasExtra("CommingFromTestDriveOption")) {
             callGetSlotAPI();
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1.0f
+            );
+            recyclerView.setLayoutParams(param);
             floatingAddCustomer.setVisibility(View.GONE);
             buttonBook.setVisibility(View.GONE);
         }
@@ -127,6 +137,8 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
         upsertTestDriveRequestObj.setCustomer_enquiry_no(upsertRideRequestObj.getEnquiryNumber());
         upsertTestDriveRequestObj.setCustomer_name(upsertRideRequestObj.getName());
         upsertTestDriveRequestObj.setCustomer_mobile(upsertRideRequestObj.getMobileNumber());
+        upsertTestDriveRequestObj.setCustomer_id(upsertRideRequestObj.getCustomer_id());
+        upsertTestDriveRequestObj.setRide_type("Test Drive");
         return upsertTestDriveRequestObj;
 
     }
@@ -137,6 +149,7 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                 APIConstants.RetrofitMethodConstants.UPSERT_TEST_DRIVE, UPSERT_TEST_DRIVE_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -155,6 +168,7 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                 APIConstants.baseurl, getSlotsRequestObj(), GetSlotsResponseObj.class,
                 APIConstants.RetrofitMethodConstants.GET_SLOTS_API, GET_SLOTS_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .setShowDialog(true)
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
@@ -165,7 +179,9 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
         SendOtpRequestObj sendOtpRequestObj = new SendOtpRequestObj();
         sendOtpRequestObj.setCustomerMonileNumber("91" + customerMobileNumber);
         sendOtpRequestObj.setCustomer_email(customerEmailID);
+        sendOtpRequestObj.setIsTestDrive("N");
         sendOtpRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_TESTDRIVE_ID));
+
         return sendOtpRequestObj;
     }
 
@@ -175,6 +191,7 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                 APIConstants.RetrofitMethodConstants.SEND_OTP_TO_CUSTOMER, SEND_OTP_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -195,6 +212,7 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                 APIConstants.RetrofitMethodConstants.GET_CUSTOMER_LIST_API, GET_CUSTOMER_LIST_API_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -205,6 +223,7 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
         if (customersIDList.size() > 0) {
             upsertSlotsRequestObj.setCustomerIDs(customersIDList);
             callUpsertSlotsServiceAPI(upsertSlotsRequestObj);
+           // MyAppsLog.LogI("Request Object", PreferenceManager.getObjectToString(upsertSlotsRequestObj));
         } else {
             showLongSnackBar("Please add Customer");
         }
@@ -217,6 +236,7 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                 APIConstants.RetrofitMethodConstants.UPSERT_SLOTS_API, UPSERT_SLOTS_API_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -260,7 +280,16 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                                 if (getCustomerListResponseObj.getCustomers() != null && getCustomerListResponseObj.getCustomers().size() > 0) {
                                     CustomersListRecyclerAdapter customersListRecyclerAdapter = new CustomersListRecyclerAdapter(CustomerListActivity.this, (ArrayList) getCustomerListResponseObj.getCustomers(), CustomerListActivity.this);
                                     recyclerView.setAdapter(customersListRecyclerAdapter);
+                                }else {
+                                    showLongSnackBar("No Test Drive's Found. Please add Test Drive's first.");
                                 }
+                            }else {
+                                showSnackBar(getCustomerListResponseObj.getStatus().getErrorDescription() + "", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                       onBackPressed();
+                                    }
+                                });
                             }
                         }
                         break;
@@ -273,6 +302,8 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                                 showLongSnackBar("Slot Booked Successfully");
                                 callActivity(NavigationActivity.class);
                                 finish();
+                            }else {
+                                showLongSnackBar(upsertSlotsResponseObj.getStatus().getErrorDescription());
                             }
                         }
                         break;
@@ -291,9 +322,10 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                                         Date slotFromDateTime = DateUtils.getStringToDate(bookingSlotsObj.getFromTime(), MMM_DD_YYYY_hh_mm_ss_a_DATE_FORMAT);
                                         Date slotToDateTime = DateUtils.getStringToDate(bookingSlotsObj.getToTime(), MMM_DD_YYYY_hh_mm_ss_a_DATE_FORMAT);
                                         if (slotFromDateTime.getHours() == currentDatenTime.getHours() || (slotToDateTime.getHours() > currentDatenTime.getHours()) && (slotToDateTime.getHours() - currentDatenTime.getHours()) <= 2) {
-                                            showSnackBar("Car is available");
+                                            //showLongSnackBar("Car is available");
 
                                             Booking_id = bookingSlotsObj.getId();
+                                            PreferenceManager.writeString(PreferenceManager.PREF_BOOKING_ID,Booking_id);
                                             CarId = bookingSlotsObj.getCarId();
                                             callGetCustomerListApi();
 //                                            upsertRideRequestObj.setCarId(bookingSlotsObj.getCarId());
@@ -327,7 +359,10 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                         SendOtpResponseObj sendOtpResponseObj = (SendOtpResponseObj) obj;
                         if (sendOtpResponseObj != null) {
                             if (sendOtpResponseObj.getStatus().getStatusCode() == SUCCESS) {
-                                callActivity(EnterOtpActivity.class);
+                                Intent callOTPActivityBeforeRideStart = new Intent(CustomerListActivity.this,EnterOtpActivity.class);
+                                callOTPActivityBeforeRideStart.putExtra("fromActivity","customerListActivity");
+                                startActivity(callOTPActivityBeforeRideStart);
+                               // callActivity(EnterOtpActivity.class);
                             }
                         }
                         break;
@@ -336,15 +371,17 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                         UpsertTestDriveResponseObj upsertTestDriveResponseObj = (UpsertTestDriveResponseObj) obj;
                         if (upsertTestDriveResponseObj != null && upsertTestDriveResponseObj.getStatus() != null) {
                             if (upsertTestDriveResponseObj.getStatus().getStatusCode() == SUCCESS) {
-                                showLongSnackBar("Details saved successfully");
-                            /*UpsertRideRequestObj upsertRideRequestObj = getUpsertRideRequestObj();
-                            upsertRideRequestObj.setId(upsertRideResponseObj.getId());
+                                //showLongSnackBar("Details saved successfully");
+                            UpsertRideRequestObj upsertRideRequestObj = getUpsertRideRequestObj();
+                            upsertRideRequestObj.setId(upsertTestDriveResponseObj.getId());
                             String upsertRideCustomerInfo = PreferenceManager.getObjectToString(upsertRideRequestObj);
-                            PreferenceManager.writeString(PREF_RIDECUSTOMER_IFO, upsertRideCustomerInfo);*/
+                            PreferenceManager.writeString(PREF_RIDECUSTOMER_IFO, upsertRideCustomerInfo);
                                 PreferenceManager.writeString(PREF_TESTDRIVE_ID, upsertTestDriveResponseObj.getId());
-                                callSendOTP_API();
+                                PreferenceManager.writeInteger(PreferenceManager.PREF_ON_GOING_RIDE_TYPE, -1);
+                                callActivity(StartRideFromTestDriveOptionActivity.class);
+                                //callSendOTP_API();
                             } else if (upsertTestDriveResponseObj.getStatus().getStatusCode() == FAILURE) {
-                                showSnackBar(upsertTestDriveResponseObj.getStatus().getErrorDescription());
+                                showLongSnackBar(upsertTestDriveResponseObj.getStatus().getErrorDescription());
                             }
                         }
 
@@ -355,16 +392,18 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                         UpsertRideResponseObj upsertRideResponseObj = (UpsertRideResponseObj) obj;
                         if (upsertRideResponseObj != null && upsertRideResponseObj.getStatus() != null) {
                             if (upsertRideResponseObj.getStatus().getStatusCode() == SUCCESS) {
-                                showLongToast("Details saved successfully");
+                               // showLongToast("Details saved successfully");
                                 UpsertRideRequestObj upsertRideRequestObj = getUpsertRideRequestObj();
                                 //upsertRideRequestObj.setId(upsertRideResponseObj.getId());
                                 String upsertRideCustomerInfo = PreferenceManager.getObjectToString(upsertRideRequestObj);
                                 PreferenceManager.writeString(PREF_RIDECUSTOMER_IFO, upsertRideCustomerInfo);
                                 PreferenceManager.writeString(PREF_RIDE_ID, upsertRideResponseObj.getId());
-                                callActivity(StartRideFromTestDriveOptionActivity.class);
-                                finish();
+
+                                callSendOTP_API();
+                                /*callActivity(StartRideFromTestDriveOptionActivity.class);
+                                finish();*/
                             } else if (upsertRideResponseObj.getStatus().getStatusCode() == FAILURE) {
-                                showSnackBar(upsertRideResponseObj.getStatus().getErrorDescription());
+                                showLongSnackBar(upsertRideResponseObj.getStatus().getErrorDescription());
                             }
                         }
                         break;
@@ -376,7 +415,7 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
 
         @Override
         public void onError(int i) {
-
+            showLongSnackBar(SOMETHING_WENT_WRONG);
         }
     };
 
@@ -391,6 +430,7 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                 APIConstants.RetrofitMethodConstants.UPSERT_RIDE_API, UPSERT_RIDE_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -405,13 +445,15 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
         upsertRideRequestObj.setUid(PreferenceManager.readString(PREF_INDIVISUAL_ID));
         upsertRideRequestObj.setAdminUid(PreferenceManager.readString(PREF_ADMIN_UID));
         upsertRideRequestObj.setCustomer_id(customer.getCustomer_id());
-        upsertRideRequestObj.setRideType("Customer Visit");
+        upsertRideRequestObj.setRideType("Test Drive"); //dont send this
         //upsertRideRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
 //        String getCusInfo = PreferenceManager.getObjectToString(upsertRideRequestObj);
 //        PreferenceManager.writeString(PreferenceManager.PREF_RIDECUSTOMER_IFO, getCusInfo);
         customerMobileNumber = customer.getMobileNumber();
         customerEmailID = customer.getEmailID();
-        callUpsertRideAPI();
+
+        callUpsertTestDriveAPI();
+       // callUpsertRideAPI();
 
         //callUpsertTestDriveAPI();
         //callSendOTP_API();
@@ -420,7 +462,10 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
 
     @Override
     public void onBackPressed() {
-        if (recyclerView.getAdapter() != null) {
+        if (getIntent().hasExtra("CommingFromTestDriveOption")) {
+            super.onBackPressed();
+            finish();
+        }else if (recyclerView.getAdapter() != null) {
             if (((CustomersListRecyclerAdapter) recyclerView.getAdapter()).getCustomerArrayList() != null && ((CustomersListRecyclerAdapter) recyclerView.getAdapter()).getCustomerArrayList().size() > 0) {
                 AppAlertDialog.showAlertDialog(CustomerListActivity.this, "Alert", "Your details are not saved yet, please click 'Book' button else you will lose customer information.", false, "Proceed", "Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -434,7 +479,13 @@ public class CustomerListActivity extends BaseActivity implements CustomersListR
                         dialog.dismiss();
                     }
                 });
+            }else {
+                super.onBackPressed();
+                finish();
             }
+        }else {
+            super.onBackPressed();
+            finish();
         }
     }
 }

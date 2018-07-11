@@ -1,6 +1,7 @@
 package com.wondercars.executiveridetracker.Adapters;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.wondercars.executiveridetracker.Manager.PreferenceManager;
 import com.wondercars.executiveridetracker.R;
 import com.wondercars.executiveridetracker.Retrofit.DTOs.GetSlotsDTOs.BookingSlotsObj;
+import com.wondercars.executiveridetracker.Utils.AppConstants;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -29,12 +32,14 @@ public class ManageSlotsRecyclerAdapter extends RecyclerView.Adapter<ManageSlots
     ArrayList<BookingSlotsObj> bookingSlotsObjArrayList;
     Activity activity;
     OnItemClickListener onItemClickListener;
+    String userId;
 
 
     public ManageSlotsRecyclerAdapter(Activity activity, ArrayList<BookingSlotsObj> bookingSlotsObjArrayList, OnItemClickListener onItemClickListener) {
         this.bookingSlotsObjArrayList = bookingSlotsObjArrayList;
         this.activity = activity;
         this.onItemClickListener = onItemClickListener;
+        userId = PreferenceManager.readString(PreferenceManager.PREF_INDIVISUAL_ID);
     }
 
     public interface OnItemClickListener {
@@ -63,18 +68,35 @@ public class ManageSlotsRecyclerAdapter extends RecyclerView.Adapter<ManageSlots
             holder.tvBookingDate.setText(DateUtils.formatStringDateFromOneToAnother(bookingSlotsObjArrayList.get(position).getBookingDate(), DateUtils.MMM_DD_COMMA_YYYY_DATE_FORMAT, DateUtils.DD_MMM_YYYY_DASH_DATE_FORMAT));
             holder.tvBookingTime.setText(DateUtils.formatStringDateFromOneToAnother(bookingSlotsObjArrayList.get(position).getFromTime(), DateUtils.MMM_DD_YYYY_hh_mm_ss_a_DATE_FORMAT, DateUtils.HH_MM_A_TIME_FORMAT)
                     + " to " + DateUtils.formatStringDateFromOneToAnother(bookingSlotsObjArrayList.get(position).getToTime(), DateUtils.MMM_DD_YYYY_hh_mm_ss_a_DATE_FORMAT, DateUtils.HH_MM_A_TIME_FORMAT));
+
+            if(bookingSlotsObjArrayList.get(position).getRideTrackerUser()!=null){
+                holder.tv_executiveName.setText(bookingSlotsObjArrayList.get(position).getRideTrackerUser().getFullName()+"");
+            } else {
+                holder.tv_executiveName.setText(" ");
+            }
+
+            if (userId.equalsIgnoreCase(bookingSlotsObjArrayList.get(position).getUid())) {
+                holder.cardView.setBackgroundColor(Color.parseColor(AppConstants.ColorStrings.white));
+
+                holder.ivDelete.setVisibility(View.VISIBLE);
+                holder.ivDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        onItemClickListener.onItemClick(v, position, bookingSlotsObjArrayList.get(position));
+                    }
+                });
+            } else {
+                holder.cardView.setBackgroundColor(Color.parseColor(AppConstants.ColorStrings.light_gray));
+                holder.ivDelete.setVisibility(View.GONE);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        holder.ivDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                onItemClickListener.onItemClick(v, position, bookingSlotsObjArrayList.get(position));
-            }
-        });
+
     }
 
     @Override
@@ -102,6 +124,9 @@ public class ManageSlotsRecyclerAdapter extends RecyclerView.Adapter<ManageSlots
         TextView tvBookingTime;
         @BindView(R.id.iv_delete)
         ImageView ivDelete;
+        @BindView(R.id.tv_executiveName)
+        TextView tv_executiveName;
+
 
         public MyViewHolder(View view) {
             super(view);

@@ -3,6 +3,7 @@ package com.wondercars.executiveridetracker.Adapters;
 import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,11 +54,19 @@ public class ViewAllRidesRecyclerAdapter extends RecyclerView.Adapter<ViewAllRid
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         try {
-            if (bookingSlotsObjArrayList.get(position) != null) {
-                holder.tvEnquirynumber.setText(bookingSlotsObjArrayList.get(position).getCustomerEnquiryNo());
-                holder.tvCustomername.setText(bookingSlotsObjArrayList.get(position).getCustomerName());
-                holder.tvCustomerNumber.setText(bookingSlotsObjArrayList.get(position).getCustomerMobile());
-                holder.tvRideType.setText(bookingSlotsObjArrayList.get(position).getRideType());
+            RidesDetails ridesDetails = bookingSlotsObjArrayList.get(position);
+            if (ridesDetails != null) {
+
+                holder.tvEnquirynumber.setText(ridesDetails.getCustomerEnquiryNo());
+                holder.tvCustomername.setText(ridesDetails.getCustomerName());
+                holder.tvCustomerNumber.setText(ridesDetails.getCustomerMobile());
+                holder.tvRideType.setText(ridesDetails.getRideType());
+
+                if (!TextUtils.isEmpty(ridesDetails.getCreateDate())) {
+                    holder.tv_ride_date.setText(ridesDetails.getCreateDate());
+                } else {
+                    holder.tv_ride_date.setText("No Date found");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,6 +89,8 @@ public class ViewAllRidesRecyclerAdapter extends RecyclerView.Adapter<ViewAllRid
         TextView tvRideType;
         @BindView(R.id.card_view)
         CardView cardView;
+        @BindView(R.id.tv_ride_date)
+        TextView tv_ride_date;
 
         public MyViewHolder(View view) {
             super(view);

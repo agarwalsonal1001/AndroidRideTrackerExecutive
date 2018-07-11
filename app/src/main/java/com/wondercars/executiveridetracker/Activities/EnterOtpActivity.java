@@ -19,17 +19,23 @@ import com.wondercars.executiveridetracker.Retrofit.DTOs.ValidateOtpDTOs.Validat
 import com.wondercars.executiveridetracker.Retrofit.DTOs.ValidateOtpDTOs.ValidateOtpResponseObj;
 import com.wondercars.executiveridetracker.Utils.APIConstants;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import umer.accl.interfaces.RetrofitInterface;
 import umer.accl.retrofit.RetrofitParamsDTO;
 import umer.accl.utils.Constants;
+import umer.accl.utils.MyAppsLog;
 
 import static android.text.TextUtils.isEmpty;
+import static com.wondercars.executiveridetracker.Manager.PreferenceManager.PREF_ADMIN_UID;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.ERROR;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.FAILURE;
 import static com.wondercars.executiveridetracker.Utils.APIConstants.RetrofitConstants.SUCCESS;
+import static com.wondercars.executiveridetracker.Utils.AppConstants.ToastMessages.SOMETHING_WENT_WRONG;
 
 public class EnterOtpActivity extends BaseActivity {
 
@@ -48,7 +54,7 @@ public class EnterOtpActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_otp);
         ButterKnife.bind(this);
-        setActionBar(toolbar,"Enter OTP");
+        setActionBar(toolbar, "Enter OTP");
     }
 
     @OnClick({R.id.iv_resendOtp, R.id.button_validate})
@@ -74,7 +80,17 @@ public class EnterOtpActivity extends BaseActivity {
         SendOtpRequestObj sendOtpRequestObj = new SendOtpRequestObj();
         sendOtpRequestObj.setCustomerMonileNumber("91" + upsertRideRequestObj.getMobileNumber());
         sendOtpRequestObj.setCustomer_email(upsertRideRequestObj.getEmailID());
+       /* if (getIntent().hasExtra("fromActivity")) {
+            // sendOtpRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
+            sendOtpRequestObj.setIsTestDrive("N");
+
+        } else {
+            // sendOtpRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_TESTDRIVE_ID));
+            sendOtpRequestObj.setIsTestDrive("Y");
+        }*/
+        sendOtpRequestObj.setIsTestDrive("Y");
         sendOtpRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_TESTDRIVE_ID));
+        MyAppsLog.LogI("Send OTP", PreferenceManager.getObjectToString(sendOtpRequestObj));
         return sendOtpRequestObj;
     }
 
@@ -84,6 +100,7 @@ public class EnterOtpActivity extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.SEND_OTP_TO_CUSTOMER, SEND_OTP_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
     }
@@ -91,8 +108,17 @@ public class EnterOtpActivity extends BaseActivity {
 
     private ValidateOtpRequestObj getValidateOtpRequestObj() {
         ValidateOtpRequestObj validateOtpRequestObj = new ValidateOtpRequestObj();
+        if (getIntent().hasExtra("fromActivity")) {
+            //  validateOtpRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_RIDE_ID));
+            validateOtpRequestObj.setIsTestDrive("N");
+        } else {
+            // validateOtpRequestObj.setAdmin_uid(PreferenceManager.readString(PREF_ADMIN_UID));
+            validateOtpRequestObj.setIsTestDrive("Y");
+        }
+        validateOtpRequestObj.setAdmin_uid(PreferenceManager.readString(PREF_ADMIN_UID));
         validateOtpRequestObj.setId(PreferenceManager.readString(PreferenceManager.PREF_TESTDRIVE_ID));
         validateOtpRequestObj.setOtp(etOtp.getText().toString());
+        MyAppsLog.LogI("Validate OTP", PreferenceManager.getObjectToString(validateOtpRequestObj));
         return validateOtpRequestObj;
 
     }
@@ -103,8 +129,37 @@ public class EnterOtpActivity extends BaseActivity {
                 APIConstants.RetrofitMethodConstants.VALIDATE_OTP, VALIDATE_OTP_SERVICE_ID, Constants.ApiMethods.POST_METHOD, retrofitInterface)
                 .setProgressDialog(new AppProgressDialog(this))
                 .setShowDialog(true)
+                .setRetrofitHeaderses(getRetrofitHeaderses())
                 .build();
         retrofitParamsDTO.execute(retrofitParamsDTO);
+    }
+
+
+    private void setTimerForButton() {
+        Timer buttonTimer = new Timer();
+        buttonTimer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        ivResendOtp.setClickable(true);
+                        ivResendOtp.setEnabled(true);
+                        ivResendOtp.setImageResource(R.drawable.ic_active_resend_otp);
+                    }
+                });
+            }
+        }, 50000);
+    }
+
+    private void setResendOTPButtonClickState(boolean isClickable) {
+        ivResendOtp.setClickable(isClickable);
+        if (isClickable == false) {
+            setTimerForButton();
+            ivResendOtp.setImageResource(R.drawable.ic_inactive_resend_otp);
+        }
     }
 
 
@@ -115,14 +170,14 @@ public class EnterOtpActivity extends BaseActivity {
             switch (serviceId) {
 
                 case SEND_OTP_SERVICE_ID:
-
                     SendOtpResponseObj sendOtpResponseObj = (SendOtpResponseObj) object;
                     if (sendOtpResponseObj != null && sendOtpResponseObj.getStatus() != null) {
                         if (sendOtpResponseObj.getStatus().getStatusCode() == SUCCESS) {
-                            showSnackBar("OTP send to customer mobile number successfully");
+                            setResendOTPButtonClickState(false);
+                            showLongSnackBar("OTP send to customer mobile number successfully");
                         } else if (sendOtpResponseObj.getStatus().getStatusCode() == FAILURE) {
 
-                            showSnackBar(sendOtpResponseObj.getStatus().getErrorDescription());
+                            showLongSnackBar(sendOtpResponseObj.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -131,11 +186,18 @@ public class EnterOtpActivity extends BaseActivity {
                     ValidateOtpResponseObj validateOtpResponseObj = (ValidateOtpResponseObj) object;
                     if (validateOtpResponseObj != null && validateOtpResponseObj.getStatus() != null) {
                         if (validateOtpResponseObj.getStatus().getStatusCode() == SUCCESS && validateOtpResponseObj.isValid()) {
-                            showSnackBar("OTP validated successfully");
-                            callActivity(StartTestDriveActivity.class);
+                            showLongSnackBar("OTP validated successfully");
+                            if (getIntent().hasExtra("fromActivity") && getIntent().getStringExtra("fromActivity").equalsIgnoreCase("customerListActivity")) {
+                                PreferenceManager.writeInteger(PreferenceManager.PREF_ON_GOING_RIDE_TYPE, -1);
+                                callActivity(StartRideFromTestDriveOptionActivity.class);
+                                finish();
+                            } else {
+
+                                callActivity(StartTestDriveActivity.class);
+                            }
                         } else if (validateOtpResponseObj.getStatus().getStatus().equalsIgnoreCase(ERROR)) {
 
-                            showSnackBar(validateOtpResponseObj.getStatus().getErrorDescription());
+                            showLongSnackBar(validateOtpResponseObj.getStatus().getErrorDescription());
                         }
                     }
                     break;
@@ -144,7 +206,7 @@ public class EnterOtpActivity extends BaseActivity {
 
         @Override
         public void onError(int serviceId) {
-
+            showLongSnackBar(SOMETHING_WENT_WRONG);
         }
     };
 }
