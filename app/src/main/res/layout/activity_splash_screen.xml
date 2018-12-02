@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wondercars.executiveridetracker.Activities.SplashScreenActivity">
+    tools:context="com.wondercars.ridetrackerexecutive.Activities.SplashScreenActivity">
 
    <ImageView
        android:layout_width="match_parent"

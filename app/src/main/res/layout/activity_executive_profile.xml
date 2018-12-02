@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80dedede"
+    android:orientation="vertical"
+    tools:context="com.wondercars.ridetrackerexecutive.Activities.ExecutiveProfileActivity">
+
+    <include
+        layout="@layout/common_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_margin_10dp"
+        android:layout_marginRight="@dimen/activity_margin_10dp"
+        android:layout_marginTop="@dimen/activity_margin_10dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <TextView
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Name" />
+
+
+            <TextView
+                android:id="@+id/et_name"
+                style="@style/text_style_black_normal_22dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin_10dp" />
+
+
+            <TextView
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:gravity="center_vertical"
+                android:text="Phone Number" />
+
+
+            <TextView
+                android:id="@+id/et_mobilenumber"
+                style="@style/text_style_black_normal_22dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin_10dp" />
+
+
+            <TextView
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:gravity="center_vertical"
+                android:text="Email" />
+
+
+            <TextView
+                android:id="@+id/et_email"
+                style="@style/text_style_black_normal_22dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin_10dp" />
+
+
+            <TextView
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:gravity="center_vertical"
+                android:text="Designation" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_designation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="Designation"
+                    android:textSize="@dimen/text_size_18dp" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

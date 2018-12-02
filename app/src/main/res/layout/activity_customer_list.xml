@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="1"
-        tools:context="com.wondercars.executiveridetracker.Activities.CustomerListActivity">
+        tools:context="com.wondercars.ridetrackerexecutive.Activities.CustomerListActivity">
 
         <include layout="@layout/common_toolbar_layout"></include>
         <android.support.v7.widget.RecyclerView

@@ -9,5 +9,9 @@
     <string name="book_slot">Book Test Drive Slot</string>
     <string name="view_rides">View Rides</string>
     <string name="manage_slots">Manage Test Drive Slots</string>
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDqlbeEQpAUO8WMdngUJ6vtDZAQQhDJ25Y</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDqGO-XL44GhlIbXGra8o0_X6L_wxz08f0</string>
+
+    <!--Old key AIzaSyDqlbeEQpAUO8WMdngUJ6vtDZAQQhDJ25Y-->
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

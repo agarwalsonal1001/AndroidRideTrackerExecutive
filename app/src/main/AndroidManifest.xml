@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wondercars.executiveridetracker">
+    package="com.wondercars.ridetrackerexecutive">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_SMS" />
@@ -14,14 +14,14 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:name=".Application.ExecutiveRideTrackerApplicationClass"
+        android:name="com.wondercars.ridetrackerexecutive.Application.ExecutiveRideTrackerApplicationClass"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.SplashScreenActivity">
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,31 +29,49 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.NavigationActivity"
+            android:name="com.wondercars.ridetrackerexecutive.Activities.NavigationActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Activities.MapsActivity" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.MapsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".Activities.BookSlotActivity" />
-        <activity android:name=".Activities.LoginActivity" />
-        <activity android:name=".Activities.EnterCustomerDetailsActivityOld" />
-        <activity android:name=".Activities.StartRideActivity" />
-        <activity android:name=".Activities.StartTestDriveActivity" />
-        <activity android:name=".Activities.ManageSlotsActivity" />
-        <activity android:name=".Activities.EnterOtpActivity" />
-        <activity android:name=".Activities.ViewAllRidesActivity" />
-        <activity android:name=".Activities.StartRideFromTestDriveOptionActivity"></activity>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.BookSlotActivity" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.LoginActivity" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.EnterCustomerDetailsActivityOld" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.StartRideActivity" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.StartTestDriveActivity" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.ManageSlotsActivity" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.EnterOtpActivity" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.ViewAllRidesActivity" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.StartRideFromTestDriveOptionActivity" />
 
         <service
-            android:name=".Services.MyService"
+            android:name="com.wondercars.ridetrackerexecutive.Services.MyService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".Activities.CustomerListActivity" />
-        <activity android:name=".Activities.EnterCustomerDetailActivity"></activity>
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.CustomerListActivity" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.EnterCustomerDetailActivity" />
+
+        <service
+            android:name="com.wondercars.ridetrackerexecutive.Services.SetNotificationService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name="com.wondercars.ridetrackerexecutive.BroadCastReceiver.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.ExecutiveProfileActivity" />
+        <activity android:name="com.wondercars.ridetrackerexecutive.Activities.ImagePicker"></activity>
     </application>
 
 </manifest>

@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.wondercars.executiveridetracker.Activities.EnterOtpActivity">
+    tools:context="com.wondercars.ridetrackerexecutive.Activities.EnterOtpActivity">
 
 
     <include layout="@layout/common_toolbar_layout"></include>
 
-    <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+    <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
         style="@style/text_style_primaryColor_normal_20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.15"
             android:padding="@dimen/activity_margin_10dp"
-            android:src="@android:drawable/ic_menu_rotate" />
+            android:src="@drawable/ic_active_resend_otp" />
     </LinearLayout>
 
 

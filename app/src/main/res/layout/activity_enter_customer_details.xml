@@ -6,26 +6,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:context="com.wondercars.executiveridetracker.Activities.EnterCustomerDetailsActivityOld">
+    tools:context="com.wondercars.ridetrackerexecutive.Activities.EnterCustomerDetailsActivityOld">
 
     <include
         layout="@layout/common_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize" />
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_margin_20dp"
-        android:layout_marginRight="@dimen/activity_margin_20dp"
-        android:orientation="vertical"
-        android:weightSum="1">
-        
+        android:fillViewport="true">
 
-            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/activity_margin_20dp"
+            android:layout_marginRight="@dimen/activity_margin_20dp"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+
+            <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -51,60 +53,60 @@
 
             </LinearLayout>
 
-        <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
-            style="@style/text_style_primaryColor_normal_20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_margin_10dp"
-            android:layout_marginTop="@dimen/activity_margin_10dp"
-            android:gravity="center_vertical"
-            android:text="Type of Vehicle" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
-            android:orientation="vertical">
-
-            <Spinner
-                android:id="@+id/spinner_type_of_vehicle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </Spinner>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_type_of_vehicle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_margin_10dp"
-            android:layout_marginTop="@dimen/activity_margin_10dp"
-            android:orientation="vertical">
-            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+            <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:layout_marginBottom="@dimen/activity_margin_10dp"
                 android:layout_marginTop="@dimen/activity_margin_10dp"
-                android:text="Vehicle Number" />
+                android:gravity="center_vertical"
+                android:text="Type of Vehicle" />
 
-            <EditText
-                android:id="@+id/et_vehiclenumber"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
-                android:singleLine="true" />
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/spinner_type_of_vehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </Spinner>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_type_of_vehicle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_margin_10dp"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
+                android:orientation="vertical">
+
+                <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
+                    style="@style/text_style_primaryColor_normal_20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_margin_10dp"
+                    android:layout_marginTop="@dimen/activity_margin_10dp"
+                    android:gravity="center_vertical"
+                    android:text="Vehicle Number" />
+
+                <EditText
+                    android:id="@+id/et_vehiclenumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+                    android:singleLine="true" />
 
 
-        </LinearLayout>
+            </LinearLayout>
 
 
-       
-            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+            <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,12 +117,14 @@
                 android:id="@+id/et_enquirynumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                android:maxLength="13"
                 android:layout_marginBottom="@dimen/activity_margin_10dp"
                 android:layout_marginTop="@dimen/activity_margin_10dp"
                 android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
                 android:singleLine="true" />
 
-            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+            <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -136,7 +140,7 @@
                 android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
                 android:singleLine="true" />
 
-            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+            <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -154,7 +158,7 @@
                 android:numeric="integer"
                 android:singleLine="true" />
 
-            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+            <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -171,32 +175,28 @@
                 android:singleLine="true" />
 
 
-
-
-
-
             <Button
                 android:id="@+id/button_next"
                 style="@style/text_style_white_normal_20dp"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/activity_margin_10dp"
-                android:layout_marginBottom="@dimen/activity_margin_20dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="@dimen/activity_margin_20dp"
+                android:layout_marginTop="@dimen/activity_margin_10dp"
                 android:layout_weight="0.08"
 
                 android:background="@drawable/blue_rectangle_with_circular_corners"
                 android:text="Next" />
-   
-        <TextView
-            android:id="@+id/tv_somethingwrong"
-            style="@style/text_style_primaryColor_normal_20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.82"
-            android:gravity="center"
-            android:text="Somthing went wrong"
-            android:visibility="gone" />
-    </LinearLayout>
-</ScrollView>
+
+            <TextView
+                android:id="@+id/tv_somethingwrong"
+                style="@style/text_style_primaryColor_normal_20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.82"
+                android:gravity="center"
+                android:text="Somthing went wrong"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

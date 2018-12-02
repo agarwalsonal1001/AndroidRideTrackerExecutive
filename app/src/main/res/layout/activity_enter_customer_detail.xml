@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:context="com.wondercars.executiveridetracker.Activities.EnterCustomerDetailActivity">
+    tools:context="com.wondercars.ridetrackerexecutive.Activities.EnterCustomerDetailActivity">
 
     <include
         layout="@layout/common_toolbar_layout"
@@ -20,7 +20,7 @@
         android:orientation="vertical"
         android:weightSum="1">
 
-            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+            <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -34,9 +34,11 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.08"
                 android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                android:maxLength="13"
                 android:singleLine="true" />
 
-            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+            <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -52,7 +54,7 @@
                 android:background="@drawable/gray_border_rectangle_with_smallcurve_corners"
                 android:singleLine="true" />
 
-            <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+            <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
                 style="@style/text_style_primaryColor_normal_20dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -70,7 +72,7 @@
                 android:numeric="integer"
                 android:singleLine="true" />
 
-        <com.wondercars.executiveridetracker.CustomClasses.MuseosanBoldTextView
+        <com.wondercars.ridetrackerexecutive.CustomClasses.MuseosanBoldTextView
             style="@style/text_style_primaryColor_normal_20dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"

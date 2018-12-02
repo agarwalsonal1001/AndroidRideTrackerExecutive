@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.wondercars.executiveridetracker.Activities.ManageSlotsActivity">
+    tools:context="com.wondercars.ridetrackerexecutive.Activities.ManageSlotsActivity">
 
     <include layout="@layout/common_toolbar_layout"></include>
     <android.support.v7.widget.RecyclerView

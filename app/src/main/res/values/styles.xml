@@ -36,6 +36,14 @@
         <item name="android:textSize">@dimen/text_size_24dp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="text_style_black_bold_18dp">
+        <item name="android:textColor">@color/blackColor</item>
+        <item name="android:textSize">@dimen/text_size_18dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
     <style name="text_style_black_bold_48dp">
         <item name="android:textColor">@color/blackColor</item>
         <item name="android:textSize">@dimen/text_size_48dp</item>
@@ -122,6 +130,7 @@
         <item name="android:textSize">@dimen/text_size_16dp</item>
         <item name="android:textStyle">normal</item>
     </style>
-
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

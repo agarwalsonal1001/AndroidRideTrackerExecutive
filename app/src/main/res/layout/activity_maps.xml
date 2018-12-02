@@ -33,5 +33,5 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.94"
-        tools:context="com.wondercars.executiveridetracker.Activities.MapsActivity" />
+        tools:context="com.wondercars.ridetrackerexecutive.Activities.MapsActivity" />
 </LinearLayout>
