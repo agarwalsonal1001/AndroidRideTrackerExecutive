@@ -2,6 +2,8 @@ package com.wondercars.ridetrackerexecutive.Utils;
 
 import android.util.Log;
 
+import android.util.Log;
+
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.google.gson.Gson;
